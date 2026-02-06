@@ -1,0 +1,26 @@
+<%
+  # Determine the relative path prefix based on page depth
+  url = cond do
+    is_nil(assigns) -> ""
+    is_map(assigns) && is_map_key(assigns, :page) ->
+      page = assigns[:page]
+      cond do
+        is_nil(page) -> ""
+        is_struct(page) && is_map_key(page, :url) -> page.url
+        is_map(page) -> Map.get(page, :url, "")
+        true -> ""
+      end
+    true -> ""
+  end
+
+  url_parts = String.split(url || "", "/", trim: true)
+  base = if length(url_parts) > 1, do: "..", else: "."
+
+  # Get current year
+  current_year = Date.utc_today().year
+%>
+<footer class="site-footer">
+  <div class="footer-container">
+    <p class="copyright">&copy; <%= current_year %> <%= @site.title %>. All rights reserved.</p>
+  </div>
+</footer>

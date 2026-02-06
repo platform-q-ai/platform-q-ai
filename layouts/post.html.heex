@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= @page.title %> - <%= @site.title %></title>
+  <link rel="stylesheet" href="../css/app.css">
+</head>
+<body>
+  <%= render_partial("nav.html", assigns) %>
+  <div class="container-custom">
+    
+    <!-- Header Section -->
+    <div class="header-grid">
+        <div class="title-col">
+            <h1><%= @page.title %></h1>
+            <div class="category-wrapper">
+                <div class="category-line"></div>
+                <span class="category"><%= if @page.frontmatter["category"], do: @page.frontmatter["category"], else: "Post" %></span>
+            </div>
+        </div>
+        <div class="intro-col">
+            <p class="header-intro">
+                <!-- Assuming an intro/hook in frontmatter for new layout, else empty -->
+                <%= if @page.frontmatter["intro"] do %><%= @page.frontmatter["intro"] %><% end %>
+            </p>
+        </div>
+    </div>
+
+    <!-- Hero Image -->
+    <div class="hero-image-container">
+        <%= if @page.frontmatter["image"] do %>
+        <img src="<%= @page.frontmatter["image"] %>" alt="<%= @page.title %>" class="hero-image">
+        <% else %>
+        <!-- Placeholder if no image provided -->
+        <div class="hero-image" style="background-color: #f0f0f0;"></div>
+        <% end %>
+    </div>
+
+    <!-- Post Details -->
+    <div class="post-details">
+        <h3>Post Details</h3>
+        <div class="meta-info">
+            <%= if @page.frontmatter["author"] do %>
+            <span>Posted By <%= @page.frontmatter["author"] %>.</span>
+            <% end %>
+            <%= if @page.date do %><%= Calendar.strftime(@page.date, "%B %d, %Y") %><% end %>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content-body">
+        <%= @content %>
+    </div>
+
+  </div>
+  <script src="../js/app.js"></script>
+  <%= render_partial("footer.html", assigns) %>
+</body>
+</html>

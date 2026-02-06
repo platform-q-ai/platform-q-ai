@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= @page.title %> - <%= @site.title %></title>
+  <link rel="stylesheet" href="./css/app.css">
+</head>
+<body>
+  <%= render_partial("nav.html", assigns) %>
+  <div class="container">
+    <div class="meta">
+      <div class="info">
+        <div class="author">
+          <div class="authorImage"></div>
+          <div class="authorInfo">
+            <div class="authorName">
+              <a href="index.html"><%= @site.author %></a>
+            </div>
+            <div class="authorSub">
+              <%= @site.title %>
+            </div>
+          </div>
+        </div>
+        <h1><%= @page.title %></h1>
+        <%= if @page && is_map(@page) && Map.has_key?(@page, :frontmatter) && (@page.frontmatter["subtitle"] || Map.get(@page, :subtitle)) do %>
+          <h2 class="subtitle"><%= @page.frontmatter["subtitle"] || Map.get(@page, :subtitle) %></h2>
+        <% end %>
+      </div>
+      <div class="image"></div>
+    </div>
+    <div class="article">
+      <%= @content %>
+    </div>
+  </div>
+  <script src="./js/app.js"></script>
+  <%= render_partial("footer.html", assigns) %>
+</body>
+</html>
