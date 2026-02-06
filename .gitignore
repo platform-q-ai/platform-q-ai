@@ -1,2 +1,6 @@
 .alkali_cache
 _site/
+_build/
+deps/
+.mix
+.elixir_ls

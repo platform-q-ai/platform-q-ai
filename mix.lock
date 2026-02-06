@@ -1,0 +1,4 @@
+%{
+  "alkali": {:hex, :alkali, "0.2.2", "1cc2c323f36754373f5c2d7b9660b243f4ed90c286b79694f6bf828e4340fcb5", [:mix], [{:boundary, "~> 0.10", [hex: :boundary, repo: "hexpm", optional: false]}], "hexpm", "0ee4cca489694c1f8757c0ea36f018b2e42a3aa25a3889255c2e6ce807f56054"},
+  "boundary": {:hex, :boundary, "0.10.4", "5fec5d2736c12f9bfe1720c3a2bd8c48c3547c24d6002ebf8e087570afd5bd2f", [:mix], [], "hexpm", "8baf6f23987afdb1483033ed0bde75c9c703613c22ed58d5f23bf948f203247c"},
+}
