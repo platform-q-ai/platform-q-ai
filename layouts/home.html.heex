@@ -42,7 +42,6 @@
         <%= if hero do %>
           <%
              image = hero.frontmatter["image"] || "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80"
-             author = hero.frontmatter["author"] || @site.author || "Author"
               date = if hero.date, do: Calendar.strftime(hero.date, "%B %d, %Y"), else: ""
              url = String.trim_leading(hero.url || "", "/")
              intro = hero.frontmatter["intro"] || hero.frontmatter["description"] || "Check out this latest post from our team."
@@ -52,7 +51,6 @@
             <h2><a href="<%= url %>"><%= hero.title %></a></h2>
             <p><%= intro %></p>
             <div class="meta">
-              <span class="post-author"><%= author %></span>
               <span class="date"><%= date %></span>
             </div>
           </div>
@@ -71,7 +69,6 @@
         <div class="divider"></div>
         <%= for post <- sidebar_posts do %>
            <%
-             author = post.frontmatter["author"] || @site.author || "Author"
               date = if post.date, do: Calendar.strftime(post.date, "%B %d, %Y"), else: ""
               url = String.trim_leading(post.url || "", "/")
               intro = post.frontmatter["intro"] || post.frontmatter["description"] || ""
@@ -82,7 +79,6 @@
             <p class="sidebar-intro"><%= intro %></p>
             <% end %>
             <div class="meta">
-              <span class="post-author"><%= author %></span>
               <span class="date"><%= date %></span>
             </div>
           </div>
@@ -96,7 +92,6 @@
       <%= for post <- grid_posts do %>
         <%
              image = post.frontmatter["image"] || "https://images.unsplash.com/photo-1499750310159-5254f4197283?auto=format&fit=crop&w=600&q=80"
-             author = post.frontmatter["author"] || @site.author || "Author"
               date = if post.date, do: Calendar.strftime(post.date, "%B %d, %Y"), else: ""
               url = String.trim_leading(post.url || "", "/")
               intro = post.frontmatter["intro"] || post.frontmatter["description"] || "Read more about this topic..."
@@ -107,7 +102,6 @@
             <h4><a href="<%= url %>"><%= post.title %></a></h4>
             <p><%= intro %></p>
             <div class="meta">
-              <span class="post-author"><%= author %></span>
               <span class="date"><%= date %></span>
             </div>
           </div>
