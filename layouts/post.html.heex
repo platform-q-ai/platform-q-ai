@@ -42,6 +42,13 @@
         <% end %>
     </div>
 
+    <!-- Post Details -->
+    <div class="post-details">
+        <div class="meta-info">
+            <%= if @page.date do %><%= Calendar.strftime(@page.date, "%B %d, %Y") %><% end %>
+        </div>
+    </div>
+
     <!-- Main Content -->
     <div class="content-body">
         <%= @content %>
