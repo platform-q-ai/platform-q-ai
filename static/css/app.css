@@ -126,10 +126,30 @@ blockquote ol {
 }
 
 code {
-  font-size: 18px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 15px;
   background: rgba(0, 0, 0, 0.05);
-  border-radius: 2px;
-  padding: 3px 5px;
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+
+pre {
+  background: #1e1e1e;
+  border-radius: 6px;
+  padding: 20px 24px;
+  overflow-x: auto;
+  margin: 25px 0;
+  line-height: 1.5;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  font-size: 14px;
+  color: #d4d4d4;
+  display: block;
+  white-space: pre;
 }
 
 .highlighted {
