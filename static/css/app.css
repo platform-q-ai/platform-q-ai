@@ -496,6 +496,10 @@ code {
   align-items: start;
 }
 
+.header-grid-full {
+  grid-template-columns: 1fr;
+}
+
 .header-grid h1 {
   font-family: "Playfair Display", serif;
   font-size: 52px;

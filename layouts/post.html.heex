@@ -16,19 +16,13 @@
   <div class="container-custom">
     
     <!-- Header Section -->
-    <div class="header-grid">
+    <div class="header-grid header-grid-full">
         <div class="title-col">
             <h1><%= @page.title %></h1>
             <div class="category-wrapper">
                 <div class="category-line"></div>
                 <span class="category"><%= if @page.frontmatter["category"], do: @page.frontmatter["category"], else: "Post" %></span>
             </div>
-        </div>
-        <div class="intro-col">
-            <p class="header-intro">
-                <!-- Assuming an intro/hook in frontmatter for new layout, else empty -->
-                <%= if @page.frontmatter["intro"] do %><%= @page.frontmatter["intro"] %><% end %>
-            </p>
         </div>
     </div>
 
