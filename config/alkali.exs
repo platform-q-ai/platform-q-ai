@@ -2,7 +2,7 @@ import Config
 
 config :alkali,
   site: %{
-    title: "Platform Q.ai",
+    title: "Platform Q Artificial Intelligence Ltd.",
     url: "https://platformq.ai",
     author: "Platform Q",
     # Base path for URLs - use "" for relative links (works with file:// and web root)
