@@ -1,7 +1,7 @@
 ---
 title: "About"
 layout: page
-subtitle: "About Platform Q.ai"
+subtitle: "About Platform Q"
 ---
 
 Platform Q.ai is a research house in open software, building atomic tools to power innovation in a rapidly changing landscape.
