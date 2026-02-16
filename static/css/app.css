@@ -589,6 +589,39 @@ code {
   max-width: 100%;
 }
 
+.content-body ul,
+.content-body ol {
+  font-family: "Lato", sans-serif;
+  font-size: 18px;
+  line-height: 1.7;
+  color: #333;
+  margin: 0 0 25px 0;
+  padding-left: 30px;
+}
+
+.content-body li {
+  margin-bottom: 10px;
+  padding-left: 6px;
+}
+
+.content-body li:last-child {
+  margin-bottom: 0;
+}
+
+.content-body ul ul,
+.content-body ol ul {
+  list-style-type: circle;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.content-body ul ol,
+.content-body ol ol {
+  list-style-type: lower-alpha;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
 @media (max-width: 768px) {
   .header-grid {
     grid-template-columns: 1fr;
