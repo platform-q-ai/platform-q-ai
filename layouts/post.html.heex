@@ -36,17 +36,6 @@
         <% end %>
     </div>
 
-    <!-- Post Details -->
-    <div class="post-details">
-        <h3>Post Details</h3>
-        <div class="meta-info">
-            <%= if @page.frontmatter["author"] do %>
-            <span>Posted By <%= @page.frontmatter["author"] %>.</span>
-            <% end %>
-            <%= if @page.date do %><%= Calendar.strftime(@page.date, "%B %d, %Y") %><% end %>
-        </div>
-    </div>
-
     <!-- Main Content -->
     <div class="content-body">
         <%= @content %>
