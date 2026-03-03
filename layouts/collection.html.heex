@@ -59,7 +59,7 @@
 
     <!-- Main Content -->
     <div class="content-body">
-        <%= @content %>
+        <%= String.replace(@content, "<p>---</p>", "<hr>") %>
     </div>
 
   </div>
