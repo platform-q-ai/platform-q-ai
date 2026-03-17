@@ -175,7 +175,7 @@ pre code {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 56px;
+  height: 72px;
 }
 
 .site-logo a {
@@ -219,7 +219,7 @@ pre code {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   border-left: 1px solid var(--border-color);
-  height: 56px;
+  height: 72px;
   box-sizing: border-box;
 }
 
@@ -281,6 +281,148 @@ pre code {
   margin: 0 auto;
   padding: 0 2rem;
   min-height: calc(100vh - 200px);
+}
+
+/* ##################################################################################
+   RESEARCH BANNER — Fail or Die Index cross-link
+   ################################################################################## */
+
+.research-banner {
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--surface-1);
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  padding-left: calc(50vw - 50%);
+  padding-right: calc(50vw - 50%);
+}
+
+.research-banner-inner {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 48px;
+  padding: 40px 0;
+  align-items: center;
+}
+
+.research-label {
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-color);
+  margin-bottom: 12px;
+}
+
+.research-headline {
+  font-family: "DM Serif Display", serif;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  color: var(--text-primary);
+  margin: 0 0 12px 0;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.research-headline em {
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+.research-description {
+  font-family: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 16px;
+  max-width: 540px;
+}
+
+.research-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color-strong);
+  padding: 8px 16px;
+  border-radius: 2px;
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s, background-color 0.2s;
+}
+
+.research-cta:hover {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+  background-color: rgba(245, 158, 11, 0.05);
+}
+
+.research-banner-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-left: 1px solid var(--border-color);
+  padding-left: 32px;
+}
+
+.research-stat {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.research-stat:last-child {
+  border-bottom: none;
+}
+
+.research-stat-value {
+  display: block;
+  font-family: "DM Serif Display", serif;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.research-stat-label {
+  display: block;
+  font-family: "DM Mono", ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+}
+
+@media (max-width: 768px) {
+  .research-banner-inner {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .research-banner-stats {
+    border-left: none;
+    border-top: 1px solid var(--border-color);
+    padding-left: 0;
+    padding-top: 16px;
+    flex-direction: row;
+    gap: 0;
+  }
+
+  .research-stat {
+    flex: 1;
+    border-bottom: none;
+    border-right: 1px solid var(--border-color);
+    padding: 0 16px;
+  }
+
+  .research-stat:first-child {
+    padding-left: 0;
+  }
+
+  .research-stat:last-child {
+    border-right: none;
+  }
 }
 
 /* ##################################################################################
@@ -672,13 +814,20 @@ a:focus-visible {
   max-width: 640px;
 }
 
+.collection-body {
+  padding-top: 32px;
+  padding-bottom: 60px;
+}
+
 .collection-meta {
   font-family: "DM Mono", ui-monospace, monospace;
   font-size: 11px;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-faint);
-  margin: 0 0 24px 0;
+  margin: 0 0 16px 0;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .posts {
@@ -688,12 +837,16 @@ a:focus-visible {
 
 .post-item {
   border-bottom: 1px solid var(--border-color);
-  padding: 24px 0;
+  padding: 20px 0;
   margin: 0;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "title date"
+    "intro intro";
+  gap: 4px 24px;
   align-items: baseline;
-  gap: 24px;
-  transition: background-color 0.15s;
 }
 
 .post-item:first-child {
@@ -705,12 +858,12 @@ a:focus-visible {
 }
 
 .post-title {
+  grid-area: title;
   font-family: "DM Serif Display", serif;
   font-size: 1.2rem;
   font-weight: 400;
   margin: 0;
   line-height: 1.3;
-  flex-grow: 1;
 }
 
 .post-title a {
@@ -724,24 +877,36 @@ a:focus-visible {
 }
 
 .post-date {
+  grid-area: date;
   font-family: "DM Mono", ui-monospace, monospace;
   font-size: 11px;
   color: var(--text-faint);
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .post-intro {
+  grid-area: intro;
   font-family: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
   font-size: 14px;
   color: var(--text-secondary);
-  margin: 4px 0 0 0;
+  margin: 0;
   line-height: 1.6;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+@media (max-width: 600px) {
+  .post-item {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "title"
+      "intro"
+      "date";
+  }
 }
 
 /* ##################################################################################
