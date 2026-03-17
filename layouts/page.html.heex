@@ -16,36 +16,38 @@
   <div class="container-custom">
 
     <!-- Header Section -->
-    <div class="header-grid">
-        <div class="title-col">
-            <h1><%= @page.title %></h1>
-            <div class="category-wrapper">
-                <div class="category-line"></div>
-                <span class="category">Page</span>
-            </div>
+    <div class="header-grid<%= if !@page.frontmatter["intro"], do: " header-grid-full" %>">
+      <div class="title-col">
+        <h1><%= @page.title %></h1>
+        <div class="category-wrapper">
+          <div class="category-line"></div>
+          <span class="category">Page</span>
         </div>
+      </div>
+      <%= if @page.frontmatter["intro"] do %>
         <div class="intro-col">
-            <p class="header-intro">
-                <%= if @page.frontmatter["intro"] do %><%= @page.frontmatter["intro"] %><% end %>
-            </p>
+          <p class="header-intro"><%= @page.frontmatter["intro"] %></p>
         </div>
+      <% end %>
     </div>
 
     <!-- Hero Image -->
-    <div class="hero-image-container">
-        <%= if @page.frontmatter["image"] do %>
+    <%= if @page.frontmatter["image"] do %>
+      <div class="hero-image-container">
         <img src="<%= @page.frontmatter["image"] %>" alt="<%= @page.title %>" class="hero-image">
-        <% end %>
-    </div>
+      </div>
+    <% end %>
 
     <!-- Post Details -->
-    <div class="post-details">
+    <%= if @page.frontmatter["subtitle"] do %>
+      <div class="post-details">
         <h3><%= @page.frontmatter["subtitle"] %></h3>
-    </div>
+      </div>
+    <% end %>
 
     <!-- Main Content -->
     <div class="content-body">
-        <%= String.replace(@content, "<p>---</p>", "<hr>") %>
+      <%= String.replace(@content, "<p>---</p>", "<hr>") %>
     </div>
 
   </div>

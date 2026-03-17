@@ -1,7 +1,4 @@
 <%
-  # Determine the relative path prefix for collection pages
-  # Collections are typically at root level (categories, tags) so they need ".."
-  # to reach assets that are also at root
   url = cond do
     is_nil(assigns) -> ""
     is_map(assigns) && is_map_key(assigns, :page) ->
@@ -16,8 +13,6 @@
   end
   
   url_parts = String.split(url || "", "/", trim: true)
-  # Collections are typically at /categories/X.html or /tags/X.html
-  # If URL has directory parts, use ".." to go up to root
   base = if length(url_parts) > 1, do: "..", else: "."
 %>
 <!DOCTYPE html>
@@ -37,29 +32,18 @@
   <%= render_partial("nav.html", assigns) %>
   <div class="container-custom">
 
-    <!-- Header Section -->
-    <div class="header-grid">
-        <div class="title-col">
-            <h1><%= @page.title %></h1>
-            <div class="category-wrapper">
-                <div class="category-line"></div>
-                <span class="category">Collection</span>
-            </div>
-        </div>
-        <div class="intro-col">
-            <p class="header-intro">
-                <%= if @page && is_map(@page) && Map.has_key?(@page, :frontmatter) && @page.frontmatter["description"] do %><%= @page.frontmatter["description"] %><% end %>
-            </p>
-        </div>
-    </div>
-
-    <!-- Hero Image -->
-    <div class="hero-image-container">
+    <!-- Collection Header -->
+    <div class="collection-header">
+      <p class="label">Collection</p>
+      <h1><%= @page.title %></h1>
+      <%= if @page && is_map(@page) && Map.has_key?(@page, :frontmatter) && @page.frontmatter["description"] do %>
+        <p class="description"><%= @page.frontmatter["description"] %></p>
+      <% end %>
     </div>
 
     <!-- Main Content -->
-    <div class="content-body">
-        <%= String.replace(@content, "<p>---</p>", "<hr>") %>
+    <div class="content-body" style="padding-top: 32px;">
+      <%= String.replace(@content, "<p>---</p>", "<hr>") %>
     </div>
 
   </div>

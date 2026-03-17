@@ -15,15 +15,23 @@
   <%= render_partial("nav.html", assigns) %>
 
   <div class="container-custom">
+
+    <!-- Home Header -->
+    <div class="home-header">
+      <p class="label">Platform Q · Artificial Intelligence</p>
+      <h1>
+        When agents build the software,<br>
+        <em>what's left to write about?</em>
+      </h1>
+      <p class="tagline">
+        Strategic analysis, architecture deep-dives, and original research for the agentic era.
+      </p>
+    </div>
+
     <%
-      # Get posts from collections.
       posts_collection = Map.get(@collections, "posts")
       posts = if posts_collection, do: posts_collection.pages, else: []
-
-      # Sort by date descending
       sorted_posts = Enum.sort_by(posts, &(&1.date), {:desc, Date})
-
-      # Take first 8 posts (1 Hero, 3 Sidebar, 4 Grid)
       {hero_list, rest} = Enum.split(sorted_posts, 1)
       hero = List.first(hero_list)
       {sidebar_posts, rest} = Enum.split(rest, 3)
@@ -31,7 +39,6 @@
     %>
 
     <%
-      # Check if we have more than 1 post total
       show_sidebar = length(sorted_posts) > 1
       section_class = if show_sidebar, do: "featured-section", else: "featured-section single-post"
       hero_class = if show_sidebar, do: "hero-post", else: "hero-post hero-post-full"
@@ -41,10 +48,10 @@
       <div class="<%= hero_class %>">
         <%= if hero do %>
           <%
-             image = hero.frontmatter["image"] || "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80"
-              date = if hero.date, do: Calendar.strftime(hero.date, "%B %d, %Y"), else: ""
-             url = String.trim_leading(hero.url || "", "/")
-             intro = hero.frontmatter["intro"] || hero.frontmatter["description"] || "Check out this latest post from our team."
+            image = hero.frontmatter["image"] || "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80"
+            date = if hero.date, do: Calendar.strftime(hero.date, "%B %d, %Y"), else: ""
+            url = String.trim_leading(hero.url || "", "/")
+            intro = hero.frontmatter["intro"] || hero.frontmatter["description"] || "Check out this latest post from our team."
           %>
           <div class="hero-image" style="background-image: url('<%= image %>')"></div>
           <div class="hero-content">
@@ -65,18 +72,18 @@
       <%= if show_sidebar do %>
       <!-- Right: Sidebar -->
       <div class="sidebar-posts">
-        <h3>Featured Posts</h3>
+        <h3>Latest</h3>
         <div class="divider"></div>
         <%= for post <- sidebar_posts do %>
-           <%
-              date = if post.date, do: Calendar.strftime(post.date, "%B %d, %Y"), else: ""
-              url = String.trim_leading(post.url || "", "/")
-              intro = post.frontmatter["intro"] || post.frontmatter["description"] || ""
-           %>
-           <div class="sidebar-post-item">
+          <%
+            date = if post.date, do: Calendar.strftime(post.date, "%B %d, %Y"), else: ""
+            url = String.trim_leading(post.url || "", "/")
+            intro = post.frontmatter["intro"] || post.frontmatter["description"] || ""
+          %>
+          <div class="sidebar-post-item">
             <h4><a href="<%= url %>"><%= post.title %></a></h4>
             <%= if intro != "" do %>
-            <p class="sidebar-intro"><%= intro %></p>
+              <p class="sidebar-intro"><%= intro %></p>
             <% end %>
             <div class="meta">
               <span class="date"><%= date %></span>
@@ -91,12 +98,12 @@
     <section class="posts-grid">
       <%= for post <- grid_posts do %>
         <%
-             image = post.frontmatter["image"] || "https://images.unsplash.com/photo-1499750310159-5254f4197283?auto=format&fit=crop&w=600&q=80"
-              date = if post.date, do: Calendar.strftime(post.date, "%B %d, %Y"), else: ""
-              url = String.trim_leading(post.url || "", "/")
-              intro = post.frontmatter["intro"] || post.frontmatter["description"] || "Read more about this topic..."
-         %>
-         <div class="grid-post-card">
+          image = post.frontmatter["image"] || "https://images.unsplash.com/photo-1499750310159-5254f4197283?auto=format&fit=crop&w=600&q=80"
+          date = if post.date, do: Calendar.strftime(post.date, "%B %d, %Y"), else: ""
+          url = String.trim_leading(post.url || "", "/")
+          intro = post.frontmatter["intro"] || post.frontmatter["description"] || "Read more about this topic..."
+        %>
+        <div class="grid-post-card">
           <div class="card-image" style="background-image: url('<%= image %>')"></div>
           <div class="card-content">
             <h4><a href="<%= url %>"><%= post.title %></a></h4>

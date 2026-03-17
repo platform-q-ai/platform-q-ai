@@ -14,38 +14,38 @@
 <body>
   <%= render_partial("nav.html", assigns) %>
   <div class="container-custom">
-    
-    <!-- Header Section -->
-    <div class="header-grid header-grid-full">
-        <div class="title-col">
-            <h1><%= @page.title %></h1>
-            <div class="category-wrapper">
-                <div class="category-line"></div>
-                <span class="category"><%= if @page.frontmatter["category"], do: @page.frontmatter["category"], else: "Post" %></span>
-            </div>
-        </div>
+
+    <!-- Post Header -->
+    <div class="post-header">
+      <div class="label">
+        <span><%= if @page.frontmatter["category"], do: @page.frontmatter["category"], else: "Post" %></span>
+      </div>
+      <h1><%= @page.title %></h1>
+      <%= if @page.frontmatter["subtitle"] do %>
+        <p class="subtitle"><%= @page.frontmatter["subtitle"] %></p>
+      <% end %>
+    </div>
+
+    <!-- Post Meta -->
+    <div class="post-meta">
+      <%= if @page.date do %>
+        <span class="date"><%= Calendar.strftime(@page.date, "%d %b %Y") %></span>
+      <% end %>
+      <%= if @page.frontmatter["category"] do %>
+        <span class="category-tag"><%= @page.frontmatter["category"] %></span>
+      <% end %>
     </div>
 
     <!-- Hero Image -->
-    <div class="hero-image-container">
-        <%= if @page.frontmatter["image"] do %>
+    <%= if @page.frontmatter["image"] do %>
+      <div class="hero-image-container">
         <img src="<%= @page.frontmatter["image"] %>" alt="<%= @page.title %>" class="hero-image">
-        <% else %>
-        <!-- Placeholder if no image provided -->
-        <div class="hero-image" style="background-color: #f0f0f0;"></div>
-        <% end %>
-    </div>
-
-    <!-- Post Details -->
-    <div class="post-details">
-        <div class="meta-info">
-            <%= if @page.date do %><%= Calendar.strftime(@page.date, "%B %d, %Y") %><% end %>
-        </div>
-    </div>
+      </div>
+    <% end %>
 
     <!-- Main Content -->
     <div class="content-body">
-        <%= String.replace(@content, "<p>---</p>", "<hr>") %>
+      <%= String.replace(@content, "<p>---</p>", "<hr>") %>
     </div>
 
   </div>
