@@ -1,8 +1,5 @@
 <%
   # Determine the relative path prefix based on page depth
-  # Root pages (index.html): use "."
-  # Nested pages (posts/*, pages/*): use ".."
-  # Safely extract URL from assigns with multiple fallbacks
   url = cond do
     is_nil(assigns) -> ""
     is_map(assigns) && is_map_key(assigns, :page) ->
@@ -17,15 +14,13 @@
   end
   
   url_parts = String.split(url || "", "/", trim: true)
-  # If URL has parts (e.g., "posts/my-post"), we're nested - use ".."
-  # If URL is empty or just a filename (e.g., "index.html"), we're at root - use "."
   base = if length(url_parts) > 1, do: "..", else: "."
 %>
 <nav class="site-nav">
   <div class="nav-container">
     <div class="site-logo">
       <a href="<%= base %>/index.html">
-        <img src="<%= base %>/images/platform_Q_logo_small.webp" alt="<%= @site.title %>" style="height: 68px; vertical-align: middle;">
+        <img src="<%= base %>/images/platform_Q_logo_small.webp" alt="<%= @site.title %>" style="height: 40px; vertical-align: middle;">
       </a>
     </div>
     <ul>

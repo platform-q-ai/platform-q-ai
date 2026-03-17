@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= @page.title %> - <%= @site.title %></title>
+  <%= render_partial("head_fonts.html", assigns) %>
   <link rel="stylesheet" href="./css/app.css">
   <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -13,30 +14,29 @@
 </head>
 <body>
   <%= render_partial("nav.html", assigns) %>
-  <div class="container">
-    <div class="meta">
-      <div class="info">
-        <div class="author">
-          <div class="authorImage"></div>
-          <div class="authorInfo">
-            <div class="authorName">
-              <a href="index.html"><%= @site.author %></a>
-            </div>
-            <div class="authorSub">
-              <%= @site.title %>
-            </div>
-          </div>
-        </div>
-        <h1><%= @page.title %></h1>
-        <%= if @page && is_map(@page) && Map.has_key?(@page, :frontmatter) && (@page.frontmatter["subtitle"] || Map.get(@page, :subtitle)) do %>
-          <h2 class="subtitle"><%= @page.frontmatter["subtitle"] || Map.get(@page, :subtitle) %></h2>
-        <% end %>
+  <div class="container-custom">
+
+    <!-- Header -->
+    <div class="post-header">
+      <div class="label">
+        <span><%= @site.title %></span>
       </div>
-      <div class="image"></div>
+      <h1><%= @page.title %></h1>
+      <%= if @page && is_map(@page) && Map.has_key?(@page, :frontmatter) && (@page.frontmatter["subtitle"] || Map.get(@page, :subtitle)) do %>
+        <p class="subtitle"><%= @page.frontmatter["subtitle"] || Map.get(@page, :subtitle) %></p>
+      <% end %>
     </div>
-    <div class="article">
+
+    <!-- Meta -->
+    <div class="post-meta">
+      <span class="date"><%= @site.author %></span>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content-body">
       <%= @content %>
     </div>
+
   </div>
   <script src="./js/app.js"></script>
   <%= render_partial("footer.html", assigns) %>
