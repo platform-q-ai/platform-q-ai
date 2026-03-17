@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= @page.title %> - <%= @site.title %></title>
+  <%= render_partial("head_fonts.html", assigns) %>
   <link rel="stylesheet" href="./css/app.css">
   <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -48,7 +49,11 @@
       <div class="<%= hero_class %>">
         <%= if hero do %>
           <%
-            image = hero.frontmatter["image"] || "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80"
+            safe_image = fn img ->
+              img = img || ""
+              if String.match?(img, ~r/^https?:\/\//) or String.match?(img, ~r/^\//) or String.match?(img, ~r/^\.\.?\//), do: String.replace(img, ~r/['"\\();\n\r]/, ""), else: ""
+            end
+            image = safe_image.(hero.frontmatter["image"]) || "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80"
             date = if hero.date, do: Calendar.strftime(hero.date, "%B %d, %Y"), else: ""
             url = String.trim_leading(hero.url || "", "/")
             intro = hero.frontmatter["intro"] || hero.frontmatter["description"] || "Check out this latest post from our team."
@@ -98,7 +103,11 @@
     <section class="posts-grid">
       <%= for post <- grid_posts do %>
         <%
-          image = post.frontmatter["image"] || "https://images.unsplash.com/photo-1499750310159-5254f4197283?auto=format&fit=crop&w=600&q=80"
+          safe_image = fn img ->
+            img = img || ""
+            if String.match?(img, ~r/^https?:\/\//) or String.match?(img, ~r/^\//) or String.match?(img, ~r/^\.\.?\//), do: String.replace(img, ~r/['"\\();\n\r]/, ""), else: ""
+          end
+          image = safe_image.(post.frontmatter["image"]) || "https://images.unsplash.com/photo-1499750310159-5254f4197283?auto=format&fit=crop&w=600&q=80"
           date = if post.date, do: Calendar.strftime(post.date, "%B %d, %Y"), else: ""
           url = String.trim_leading(post.url || "", "/")
           intro = post.frontmatter["intro"] || post.frontmatter["description"] || "Read more about this topic..."

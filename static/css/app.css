@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap");
+/* Fonts loaded via <link> in HTML <head> to avoid render-blocking @import */
 
 /* ##################################################################################
    RESET & BASE — MoatRadar design system
@@ -215,7 +215,7 @@ pre code {
   padding: 8px 16px;
   display: inline-flex;
   align-items: center;
-  transition: color 0.2s ease, background-color 0.2s ease;
+  transition: color 0.2s ease, background-color 0.15s ease;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   border-left: 1px solid var(--border-color);
@@ -348,6 +348,7 @@ pre code {
 .hero-post .hero-image {
   width: 100%;
   height: 320px;
+  aspect-ratio: 16 / 9;
   background-size: cover;
   background-position: center;
   margin-bottom: 24px;
@@ -502,7 +503,8 @@ pre code {
   overflow: hidden;
 }
 
-.grid-post-card:hover {
+.grid-post-card:hover,
+.grid-post-card:focus-within {
   background-color: var(--surface-2);
 }
 
@@ -518,8 +520,23 @@ pre code {
   transition: opacity 0.2s ease;
 }
 
-.grid-post-card:hover::before {
+.grid-post-card:hover::before,
+.grid-post-card:focus-within::before {
   opacity: 1;
+}
+
+/* Focus states for keyboard navigation */
+a:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.site-nav ul a:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: -2px;
+  color: var(--text-primary);
+  background-color: var(--surface-1);
 }
 
 .grid-post-card .card-image {
@@ -808,7 +825,9 @@ pre code {
 
 .hero-image-container .hero-image {
   width: 100%;
-  height: 400px;
+  height: auto;
+  max-height: 400px;
+  aspect-ratio: 16 / 9;
   object-fit: cover;
   display: block;
   border: 1px solid var(--border-color-strong);
