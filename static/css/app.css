@@ -814,6 +814,11 @@ a:focus-visible {
   max-width: 640px;
 }
 
+.collection-body {
+  padding-top: 32px;
+  padding-bottom: 60px;
+}
+
 .collection-meta {
   font-family: "DM Mono", ui-monospace, monospace;
   font-size: 11px;
