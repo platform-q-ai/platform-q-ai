@@ -1,48 +1,26 @@
 {
   "event": "COMMENT",
-  "body": "Review responses for feature/privacy-terms-pages",
+  "body": "",
   "comments": [
     {
-      "path": "layouts/partials/footer.html",
-      "line": 24,
-      "body": "[arch] ACKNOWLEDGED — The base path duplication between nav.html and footer.html is pre-existing. Extracting to a shared helper is a good future improvement but out of scope for this change.",
-      "resolved": true
-    },
-    {
-      "path": "layouts/partials/footer.html",
-      "line": 25,
-      "body": "[arch] VERIFIED — Confirmed the `<%= base %>/pages/` pattern matches nav.html which uses `<%= base %>/pages/about.html`. Consistent with established convention.",
-      "resolved": true
+      "path": "static/css/app.css",
+      "line": 11,
+      "body": "[arch] Good choice using `overflow-x: clip` instead of `hidden` to preserve sticky navigation functionality. This addresses the browser compatibility concern where `overflow: hidden` can break `position: sticky` elements in some browsers."
     },
     {
       "path": "static/css/app.css",
-      "line": 275,
-      "body": "[css] VERIFIED — The footer-links styles are placed immediately after .copyright, which is the correct location within the FOOTER section of the CSS.",
-      "resolved": true
+      "line": 11,
+      "body": "[responsive] While this fixes the immediate horizontal scroll issue, consider if the full-bleed pattern on `.research-banner` could be refined for mobile. The `calc(-50vw + 50%)` technique is the root cause - explore container queries or mobile-specific approaches that don't require document-level clipping."
     },
     {
       "path": "static/css/app.css",
-      "line": 281,
-      "body": "[css] FIXED — Bumped footer link font-size from 11px to 12px to match .copyright text size for visual consistency.",
-      "resolved": true
+      "line": 11,
+      "body": "[css] Add a comment above this rule explaining its purpose: `/* Prevent horizontal scroll from full-bleed elements on mobile */`. This helps future developers understand why document-level overflow clipping is needed."
     },
     {
       "path": "static/css/app.css",
-      "line": 299,
-      "body": "[responsive] VERIFIED — 600px breakpoint matches the existing nav breakpoint already in the CSS. Footer-links uses flex which stacks properly within the column layout.",
-      "resolved": true
-    },
-    {
-      "path": "content/pages/privacy.md",
-      "line": 1,
-      "body": "[template] Acknowledged — frontmatter follows established patterns.",
-      "resolved": true
-    },
-    {
-      "path": "layouts/partials/footer.html",
-      "line": 28,
-      "body": "[arch] ACKNOWLEDGED — The two `<p class=\"copyright\">` elements are pre-existing. The footer-links div is a new distinct element between them. Renaming the tagline class is a valid cleanup but out of scope.",
-      "resolved": true
+      "line": 11,
+      "body": "[a11y] Verify that `overflow-x: clip` doesn't interfere with horizontal scrolling for users who zoom beyond 200% or use assistive technologies that rely on programmatic scrolling. Test with screen readers and browser zoom."
     }
   ]
 }
