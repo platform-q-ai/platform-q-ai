@@ -8,6 +8,7 @@ html,
 body {
   margin: 0;
   width: 100%;
+  overflow-x: clip; /* Prevent horizontal scroll from full-bleed elements (e.g. research banner) */
   background-color: #0e0e0d;
   color: #e8e6df;
   -webkit-font-smoothing: antialiased;
