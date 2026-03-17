@@ -1,66 +1,48 @@
 {
   "event": "COMMENT",
-  "body": "",
+  "body": "Review responses for feature/privacy-terms-pages",
   "comments": [
     {
-      "path": "layouts/home.html.heex",
-      "line": 21,
-      "body": "[template] The research banner is placed inside `.container-custom` but uses full-bleed CSS. This creates a dependency between template structure and CSS implementation. Consider moving the banner outside the container or restructuring to make the full-bleed technique more explicit in the template."
+      "path": "layouts/partials/footer.html",
+      "line": 24,
+      "body": "[arch] ACKNOWLEDGED — The base path duplication between nav.html and footer.html is pre-existing. Extracting to a shared helper is a good future improvement but out of scope for this change.",
+      "resolved": true
+    },
+    {
+      "path": "layouts/partials/footer.html",
+      "line": 25,
+      "body": "[arch] VERIFIED — Confirmed the `<%= base %>/pages/` pattern matches nav.html which uses `<%= base %>/pages/about.html`. Consistent with established convention.",
+      "resolved": true
     },
     {
       "path": "static/css/app.css",
-      "line": 293,
-      "body": "[css] The full-bleed technique using negative viewport calculations is correct but fragile. The banner must be placed inside a container with `max-width` and `margin: 0 auto` to work properly. Consider documenting this requirement or using a more resilient approach like `width: 100vw; margin-left: calc(-50vw + 50%);`"
-    },
-    {
-      "path": "static/css/app.css", 
-      "line": 304,
-      "body": "[responsive] The grid layout uses `auto` for the stats column, but on smaller screens this could cause layout issues. Consider using a more explicit width like `minmax(auto, 200px)` or `fit-content` for better control."
+      "line": 275,
+      "body": "[css] VERIFIED — The footer-links styles are placed immediately after .copyright, which is the correct location within the FOOTER section of the CSS.",
+      "resolved": true
     },
     {
       "path": "static/css/app.css",
-      "line": 335,
-      "body": "[css] The headline border reset (`border-bottom: none; padding-bottom: 0;`) suggests this h2 inherits unwanted styles. This indicates the global h2 styles may be too broad. Consider scoping the headline styles more specifically to avoid inheritance conflicts."
+      "line": 281,
+      "body": "[css] FIXED — Bumped footer link font-size from 11px to 12px to match .copyright text size for visual consistency.",
+      "resolved": true
     },
     {
       "path": "static/css/app.css",
-      "line": 395,
-      "body": "[responsive] Mobile breakpoint at 768px is quite large. Many tablets will use the mobile layout. Consider using 640px or 720px for the main breakpoint to better match typical responsive design patterns."
+      "line": 299,
+      "body": "[responsive] VERIFIED — 600px breakpoint matches the existing nav breakpoint already in the CSS. Footer-links uses flex which stacks properly within the column layout.",
+      "resolved": true
     },
     {
-      "path": "static/css/app.css",
-      "line": 835,
-      "body": "[css] The post item grid uses named grid areas, which is excellent for maintainability. However, the fallback for older browsers isn't addressed. Consider adding `display: block` fallback before the grid declaration for better progressive enhancement."
+      "path": "content/pages/privacy.md",
+      "line": 1,
+      "body": "[template] Acknowledged — frontmatter follows established patterns.",
+      "resolved": true
     },
     {
-      "path": "static/css/app.css",
-      "line": 897,
-      "body": "[responsive] The mobile breakpoint for post items (600px) differs from the research banner breakpoint (768px). For consistency and simpler maintenance, consider standardizing on common breakpoints across the design system."
-    },
-    {
-      "path": "layouts/partials/nav.html",
-      "line": 23,
-      "body": "[template] The logo image has both `height` and `width` set to fixed pixel values (60px each), which assumes a square aspect ratio. If the actual image isn't square, this will cause distortion. Consider using only `height` or `width` and let the browser maintain aspect ratio, or verify the image is actually square."
-    },
-    {
-      "path": "layouts/partials/nav.html",
-      "line": 27,
-      "body": "[a11y] The external research link uses the `↗` character but lacks `aria-label` to clarify for screen readers that this opens in a new tab. Consider adding `aria-label=\"Research (opens in new tab)\"` or similar for better accessibility."
-    },
-    {
-      "path": "layouts/collection.html.heex",
-      "line": 46,
-      "body": "[template] The class name change from `content-body` to `collection-body` improves specificity, but the inline styles (`padding-top: 32px; padding-bottom: 60px;`) should be moved to CSS for better maintainability. This mixes presentation with markup."
-    },
-    {
-      "path": "static/css/app.css",
-      "line": 178,
-      "body": "[css] Navigation height increased from 56px to 72px to accommodate the larger logo. Ensure this doesn't cause layout shifts or overlap issues with fixed positioning if the nav becomes sticky on scroll."
-    },
-    {
-      "path": "static/css/app.css",
-      "line": 222,
-      "body": "[css] The nav link height is also updated to 72px to match the nav container. This maintains vertical alignment but consider whether touch targets need adjustment for mobile usability (recommend minimum 44px touch target)."
+      "path": "layouts/partials/footer.html",
+      "line": 28,
+      "body": "[arch] ACKNOWLEDGED — The two `<p class=\"copyright\">` elements are pre-existing. The footer-links div is a new distinct element between them. Renaming the tagline class is a valid cleanup but out of scope.",
+      "resolved": true
     }
   ]
 }
