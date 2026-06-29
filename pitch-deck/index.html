@@ -378,7 +378,11 @@ p{font-size:clamp(15px,1.4vw,19px);line-height:1.7;color:var(--text-2);max-width
     n=Math.max(0,Math.min(total-1,n));
     if(n===cur)return;
     slides[cur].classList.remove('active');
-    slides[cur].classList.add(n>cur?'prev':'');
+    if (n > cur) {
+      slides[cur].classList.add('prev');
+    } else {
+      slides[cur].classList.remove('prev');
+    }
     slides[n].classList.remove('prev');
     slides[n].classList.add('active');
     // restart animations
