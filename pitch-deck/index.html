@@ -151,6 +151,21 @@ p{font-size:clamp(15px,1.4vw,19px);line-height:1.7;color:var(--text-2);max-width
 /* ===== Quote ===== */
 .quote{font-family:"DM Serif Display",serif;font-style:italic;font-size:clamp(1.4rem,2.6vw,2rem);line-height:1.5;color:var(--text);max-width:30ch;border-left:3px solid var(--accent);padding-left:24px}
 
+/* Fit the two dense slides without making them feel cramped. */
+.fit-slide .eyebrow{margin-bottom:18px}
+.fit-slide h2{font-size:clamp(1.75rem,3.8vw,2.65rem);margin-bottom:14px}
+.fit-slide .two-col{gap:clamp(1.75rem,4vw,4rem)}
+.fit-slide p{font-size:15px;line-height:1.55}
+.fit-slide .steps{margin-top:0}
+.fit-slide .step{padding:12px 0;grid-template-columns:50px 1fr;gap:16px}
+.fit-slide .step h3{font-size:1.18rem;margin-bottom:4px}
+.fit-slide .step p{font-size:14px;line-height:1.45}
+.fit-slide .timeline{margin-top:0}
+.fit-slide .tl-item{padding-bottom:7px}
+.fit-slide .tl-item .when{font-size:10px;margin-bottom:3px}
+.fit-slide .tl-item h3{font-size:1.15rem;margin-bottom:3px}
+.fit-slide .tl-item p{font-size:13.5px;line-height:1.38}
+
 @media print{
   html,body{overflow:visible;height:auto}
   .deck{position:static}
@@ -192,7 +207,7 @@ p{font-size:clamp(15px,1.4vw,19px);line-height:1.7;color:var(--text-2);max-width
     </section>
 
     <!-- 3. WHAT WE DO -->
-    <section class="slide" data-slide="3">
+    <section class="slide fit-slide" data-slide="3">
       <div class="brand-mark">Platform Q AI</div>
       <div class="slide-num">03 / 09</div>
       <div class="eyebrow anim">What We Do</div>
@@ -232,7 +247,7 @@ p{font-size:clamp(15px,1.4vw,19px);line-height:1.7;color:var(--text-2);max-width
     </section>
 
     <!-- 5. CASE STUDY: NANDOS - WHAT WE DID -->
-    <section class="slide" data-slide="5">
+    <section class="slide fit-slide" data-slide="5">
       <div class="brand-mark">Platform Q AI</div>
       <div class="slide-num">05 / 09</div>
       <div class="eyebrow anim">Case Study · Nando's — Six Months</div>
