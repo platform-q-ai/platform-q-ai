@@ -151,6 +151,33 @@ p{font-size:clamp(15px,1.4vw,19px);line-height:1.7;color:var(--text-2);max-width
 /* ===== Quote ===== */
 .quote{font-family:"DM Serif Display",serif;font-style:italic;font-size:clamp(1.4rem,2.6vw,2rem);line-height:1.5;color:var(--text);max-width:30ch;border-left:3px solid var(--accent);padding-left:24px}
 
+/* Dense content slides need to fit between the fixed header chrome and footer controls. */
+.compact-slide .eyebrow{margin-bottom:14px}
+.compact-slide h2{font-size:clamp(1.55rem,3.3vw,2.45rem);margin-bottom:14px}
+.compact-slide .two-col{gap:clamp(1.4rem,3vw,3rem)}
+.compact-slide p{font-size:15px;line-height:1.55}
+.compact-slide .steps{margin-top:0}
+.compact-slide .step{grid-template-columns:44px 1fr;gap:14px;padding:11px 0}
+.compact-slide .step h3,
+.compact-slide .tl-item h3{font-size:1.08rem;margin-bottom:3px}
+.compact-slide .step p,
+.compact-slide .tl-item p{font-size:13px;line-height:1.42}
+.compact-slide .timeline{margin-top:0;padding-left:30px}
+.compact-slide .tl-item{padding-bottom:7px}
+.compact-slide .tl-item::before{left:-26px;width:12px;height:12px}
+.compact-slide .tl-item .when{font-size:10px;margin-bottom:3px}
+
+@media(max-height:760px){
+  .slide{padding-top:4.75rem;padding-bottom:1.35rem}
+  .compact-slide .eyebrow{margin-bottom:10px}
+  .compact-slide h2{font-size:clamp(1.45rem,3vw,2.15rem);margin-bottom:10px}
+  .compact-slide p{font-size:14px;line-height:1.45}
+  .compact-slide .step{padding:8px 0}
+  .compact-slide .tl-item{padding-bottom:5px}
+  .compact-slide .step p,
+  .compact-slide .tl-item p{font-size:12.5px;line-height:1.34}
+}
+
 @media print{
   html,body{overflow:visible;height:auto}
   .deck{position:static}
@@ -192,7 +219,7 @@ p{font-size:clamp(15px,1.4vw,19px);line-height:1.7;color:var(--text-2);max-width
     </section>
 
     <!-- 3. WHAT WE DO -->
-    <section class="slide" data-slide="3">
+    <section class="slide compact-slide" data-slide="3">
       <div class="brand-mark">Platform Q AI</div>
       <div class="slide-num">03 / 09</div>
       <div class="eyebrow anim">What We Do</div>
@@ -232,7 +259,7 @@ p{font-size:clamp(15px,1.4vw,19px);line-height:1.7;color:var(--text-2);max-width
     </section>
 
     <!-- 5. CASE STUDY: NANDOS - WHAT WE DID -->
-    <section class="slide" data-slide="5">
+    <section class="slide compact-slide" data-slide="5">
       <div class="brand-mark">Platform Q AI</div>
       <div class="slide-num">05 / 09</div>
       <div class="eyebrow anim">Case Study · Nando's — Six Months</div>
