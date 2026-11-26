@@ -51,6 +51,23 @@ The DSpark drafter has 3 layers and proposes 7 tokens.
 
 <div class="table-wrap table-text"><table><thead><tr><th>part of the model</th><th>precision</th></tr></thead><tbody><tr><td>Routed MoE experts</td><td>NVFP4, as shipped in the checkpoint; layers 20–23 in MXFP8</td></tr><tr><td>Attention projections, all 24 layers (fused qkv and output)</td><td>FP8 E4M3 weights with per-row scales; activations FP8 per-token in prefill (W8A8), BF16 in decode</td></tr><tr><td>LM head, shared with the drafter</td><td>FP8 E4M3</td></tr><tr><td>DSpark drafter attention (qkv, context kv, output) and MLP (gate-up, down)</td><td>FP8 E4M3</td></tr><tr><td>DSpark drafter 16,384-token draft head and Markov head</td><td>BF16</td></tr><tr><td>Embeddings, router, loop gates, norms, short convolutions</td><td>BF16</td></tr><tr><td>KV cache</td><td>FP8</td></tr></tbody></table></div>
 
+## Thinking budget: ThinkNudge
+
+Inkling thinks before it answers, and on hard coding steps it can keep thinking for 16,000 tokens or more, sometimes drafting a whole implementation in its reasoning and running out of room before it answers. For an agent that's wasted time. ThinkNudge is a vLLM logits processor, included in the repo, that keeps thinking in proportion without cutting it off mid-thought.
+
+- **Soft budget (the nudge).** Once a response has used `start` thinking tokens, the logit of Inkling's end-of-thinking token gets a boost of `base + per1k × (tokens past start) / 1000`, capped at `max`. The boost applies only at natural pauses, after a newline or a sentence end, so the model wraps up at the end of a thought rather than mid-sentence.
+- **Hard cap.** At `cap` thinking tokens the processor forces the close sequence and stops the model opening another thinking block in that response. It forces only the close, so the model still chooses whether to answer or call a tool.
+- **Counting.** Thinking is counted over the whole response, across every thinking block, so a model can't escape the budget by closing and reopening a block. Speculative drafts are tracked too: the state follows exactly the tokens vLLM accepts.
+- **Fast.** The state lives on the GPU and two small Triton kernels update it each step with no host sync.
+
+<div class="table-wrap"><table><thead><tr><th>server default</th><th>value</th></tr></thead><tbody><tr><td>nudge starts after</td><td>5,000 thinking tokens</td></tr><tr><td>boost: base / per 1k tokens / max</td><td>6 / 2 / 18 logits</td></tr><tr><td>boost applies at</td><td>pauses (newline or sentence end)</td></tr><tr><td>hard cap</td><td>12,000 thinking tokens</td></tr></tbody></table></div>
+
+Inkling's end-of-thinking token sits about 15 to 30 logits below the top choice at a pause (median 23), so a boost that starts from zero does nothing for thousands of tokens. That's why the nudge starts with a step (`base`) and goes up to 18.
+
+Any request can set its own budget through `vllm_xargs` (`think_nudge`, `think_end_boost`, `think_cap`), or use the effort profiles: `low` uses the server defaults above, `medium` nudges from a third of the request's output room and stops at two thirds, and `high` doesn't nudge and stops at 80%.
+
+The soft budget follows the think-end boost in [gr8](https://github.com/kindlingai/gr8), with two changes for Inkling: the boost starts with a step and is gated to pauses, and it tracks the thinking blocks the model opens itself. gr8 applies its boost only when the prompt leaves a thinking block open, which an Inkling prompt never does.
+
 ## Run it
 
 ```bash
@@ -64,6 +81,11 @@ Then point any OpenAI-compatible client at `http://localhost:8100/v1`, model `in
 
 ## Credits
 
-This builds on [vLLM](https://github.com/vllm-project/vllm) and on Inkling 2 Mini by Thinking Machines Lab. Several kernel ideas come from **Ingine** by satellitedown ([inkling-2-mini-abliterated-ingine](https://github.com/satellitedown/inkling-2-mini-abliterated-ingine)). Profiling its decode step next to ours showed us where vLLM's time was going. The thinking budget follows [gr8](https://github.com/kindlingai/gr8)'s think-end boost. And the whole effort was inspired by the work Ash and Mia of TensorFold have shared and talked about.
+- **[vLLM](https://github.com/vllm-project/vllm)** (Apache-2.0). Everything here is a set of patches to vLLM and its Inkling 2 support: the batching, paged KV cache, chunked prefill, prefix caching, speculative decoding and the OpenAI-compatible server are all vLLM's.
+- **[Thinking Machines Lab](https://huggingface.co/thinkingmachines/Inkling-2-Mini)**, for Inkling 2 Mini and its DSpark drafter (Apache-2.0).
+- **Ingine** by satellitedown ([inkling-2-mini-abliterated-ingine](https://github.com/satellitedown/inkling-2-mini-abliterated-ingine), Apache-2.0), a hand-written CUDA engine for Inkling 2 Mini on one RTX 5090. Profiling its decode step next to ours showed where our time was going, and several of our kernels follow its ideas: loading weights before the programmatic-dependent-launch wait, one launch for several projections, a single-kernel loop message-gate chain, the conv/mix layout, prefetching the expert down-projection, a confidence threshold for how many drafts to verify, and FP8 dense weights with per-row scales. No Ingine code is copied; each file in the repo says which idea it follows.
+- **[gr8](https://github.com/kindlingai/gr8)**, whose think-end boost and thinking budget ThinkNudge's soft budget follows.
+- **Ash and Mia of TensorFold**: this work was inspired by what they have shared and talked about.
+- **[Triton](https://github.com/triton-lang/triton)**, which the FP8 prefill, ThinkNudge and several decode kernels are written in, and **NVIDIA Nsight Systems**, used for the profiles.
 
 How we got here, including what didn't work, is in [What we learned making vLLM faster on Inkling 2 Mini](2026-11-26-what-we-learned-making-vllm-faster.html).
