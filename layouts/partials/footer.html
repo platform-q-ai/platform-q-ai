@@ -1,30 +1,27 @@
 <%
-  url = cond do
-    is_nil(assigns) -> ""
-    is_map(assigns) && is_map_key(assigns, :page) ->
-      page = assigns[:page]
-      cond do
-        is_nil(page) -> ""
-        is_struct(page) && is_map_key(page, :url) -> page.url
-        is_map(page) -> Map.get(page, :url, "")
-        true -> ""
-      end
-    true -> ""
-  end
-
-  url_parts = String.split(url || "", "/", trim: true)
-  base = if length(url_parts) > 1, do: "..", else: "."
-
+  footer_page = if is_map(assigns), do: Map.get(assigns, :page), else: nil
+  footer_url = if is_map(footer_page), do: Map.get(footer_page, :url) || "", else: ""
+  footer_base = if length(String.split(footer_url, "/", trim: true)) > 1, do: "..", else: "."
   current_year = Date.utc_today().year
 %>
 <footer class="site-footer">
-  <div class="footer-container">
-    <p class="copyright">&copy; <%= current_year %> <%= @site.title %></p>
-    <div class="footer-links">
-      <a href="<%= base %>/pages/privacy.html">Privacy Policy</a>
-      <span class="footer-sep">·</span>
-      <a href="<%= base %>/pages/terms.html">Terms of Use</a>
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <img src="<%= footer_base %>/images/pq-logo-nav.webp" alt="" width="28" height="28">
+      <div>
+        <p class="footer-name"><%= @site.title %></p>
+        <p class="footer-tag">Intelligence for the agentic era</p>
+      </div>
     </div>
-    <p class="copyright">Intelligence for the agentic era</p>
+    <nav class="footer-nav" aria-label="Footer">
+      <ul>
+        <li><a href="<%= footer_base %>/posts/index.html">Posts</a></li>
+        <li><a href="https://github.com/platform-q-ai/inkling-mini-5090" rel="noopener noreferrer">Code<span aria-hidden="true">&nbsp;↗</span></a></li>
+        <li><a href="<%= footer_base %>/pages/about.html">About</a></li>
+        <li><a href="<%= footer_base %>/pages/privacy.html">Privacy Policy</a></li>
+        <li><a href="<%= footer_base %>/pages/terms.html">Terms of Use</a></li>
+      </ul>
+    </nav>
+    <p class="footer-copy">&copy; <%= current_year %> <%= @site.title %></p>
   </div>
 </footer>

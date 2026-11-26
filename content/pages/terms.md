@@ -68,6 +68,4 @@ If any provision of these Terms is found to be unenforceable, the remaining prov
 
 If you have any questions about these Terms, please contact us at:
 
-**Platform Q Artificial Intelligence Limited**
-Email: [hello@platformq.ai](mailto:hello@platformq.ai)
-Website: [https://platformq.ai](https://platformq.ai)
+**Platform Q Artificial Intelligence Limited**<br>Email: [hello@platformq.ai](mailto:hello@platformq.ai)<br>Website: [https://platformq.ai](https://platformq.ai)

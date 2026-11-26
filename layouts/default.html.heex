@@ -3,42 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= @page.title %> - <%= @site.title %></title>
-  <%= render_partial("head_fonts.html", assigns) %>
-  <link rel="stylesheet" href="./css/app.css">
-  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="shortcut icon" href="/favicon.ico" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-  <link rel="manifest" href="/site.webmanifest" />
+  <title><%= if @page.title in [nil, "", "Platform Q"], do: "Platform Q", else: @page.title <> " - Platform Q" %></title>
+  <%= render_partial("head.html", assigns) %>
 </head>
 <body>
   <%= render_partial("nav.html", assigns) %>
-  <div class="container-custom">
-
-    <!-- Header -->
-    <div class="post-header">
-      <div class="label">
-        <span><%= @site.title %></span>
+  <%= render_partial("prose.html", assigns) %>
+  <main id="main">
+    <article class="page">
+      <header class="post-header wrap">
+        <p class="eyebrow eyebrow-accent"><%= @site.author %></p>
+        <h1><%= @page.title %></h1>
+      </header>
+      <div class="prose wrap">
+        <%= prose_html %>
       </div>
-      <h1><%= @page.title %></h1>
-      <%= if @page && is_map(@page) && Map.has_key?(@page, :frontmatter) && (@page.frontmatter["subtitle"] || Map.get(@page, :subtitle)) do %>
-        <p class="subtitle"><%= @page.frontmatter["subtitle"] || Map.get(@page, :subtitle) %></p>
-      <% end %>
-    </div>
-
-    <!-- Meta -->
-    <div class="post-meta">
-      <span class="date"><%= @site.author %></span>
-    </div>
-
-    <!-- Main Content -->
-    <div class="content-body">
-      <%= @content %>
-    </div>
-
-  </div>
-  <script src="./js/app.js"></script>
+    </article>
+  </main>
   <%= render_partial("footer.html", assigns) %>
 </body>
 </html>

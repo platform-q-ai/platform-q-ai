@@ -3,161 +3,123 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= @page.title %> - <%= @site.title %></title>
-  <%= render_partial("head_fonts.html", assigns) %>
-  <link rel="stylesheet" href="./css/app.css">
-  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="shortcut icon" href="/favicon.ico" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-  <link rel="manifest" href="/site.webmanifest" />
+  <title><%= if @page.title in [nil, "", "Platform Q"], do: "Platform Q", else: @page.title <> " - Platform Q" %></title>
+  <%= render_partial("head.html", assigns) %>
 </head>
 <body>
   <%= render_partial("nav.html", assigns) %>
+  <%
+    repo_url = "https://github.com/platform-q-ai/inkling-mini-5090"
+    posts_collection = Map.get(@collections || %{}, "posts")
+    posts = if posts_collection, do: posts_collection.pages, else: []
+    sorted_posts = Enum.sort_by(posts, &(&1.date), {:desc, DateTime})
+    recipe = Enum.find(posts, fn p -> String.contains?(p.url || "", "inkling-2-mini-rtx-5090-recipe") end)
+    recipe_href = if recipe, do: String.trim_leading(recipe.url, "/"), else: "posts/index.html"
+  %>
+  <main id="main">
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <p class="eyebrow">Platform Q · Open inference engineering</p>
+      <h1 id="hero-title">Big models, small hardware, <span class="hero-em">measured honestly.</span></h1>
+      <p class="lede">Open inference engineering for the agentic era: what we built, what worked, and what didn't.</p>
+    </section>
 
-  <div class="container-custom">
-
-    <!-- Research Banner -->
-    <section class="research-banner">
-      <div class="research-banner-inner">
-        <div class="research-banner-content">
-          <p class="research-label">Research · Fail or Die Index™</p>
-          <h2 class="research-headline">When software creation costs got to zero, <em>which SaaS companies survive?</em></h2>
-          <p class="research-description">
-            A proprietary score from 0–100 mapping existential risk in the agentic era.
-            50 companies tracked across moat strength, AI exposure, threat velocity, and adaptation rate.
-          </p>
-          <a href="https://failordie.com" target="_blank" rel="noopener noreferrer" class="research-cta">
-            Explore the live index →
-          </a>
-        </div>
-        <div class="research-banner-stats">
-          <div class="research-stat">
-            <span class="research-stat-value">50</span>
-            <span class="research-stat-label">Companies tracked</span>
-          </div>
-          <div class="research-stat">
-            <span class="research-stat-value">0–100</span>
-            <span class="research-stat-label">FoD Score range</span>
-          </div>
-          <div class="research-stat">
-            <span class="research-stat-value">5</span>
-            <span class="research-stat-label">Risk dimensions</span>
+    <section class="feature wrap" aria-labelledby="feature-title">
+      <div class="feature-card">
+        <div class="feature-text">
+          <p class="eyebrow eyebrow-accent">Open source · Apache-2.0</p>
+          <h2 id="feature-title">Inkling 2 Mini on one RTX 5090</h2>
+          <p>We've optimised Thinking Machines Lab's 26B looped mixture-of-experts model on a single consumer GPU for long-running agentic tasks and coding: a set of vLLM patches, with every result and how we measured it.</p>
+          <div class="actions">
+            <a class="button button-primary" href="<%= recipe_href %>">Read the recipe</a>
+            <a class="button" href="<%= repo_url %>" rel="noopener noreferrer">Code on GitHub<span aria-hidden="true">&nbsp;↗</span></a>
           </div>
         </div>
+
+        <div class="stats-block">
+        <dl class="stats">
+          <div class="stat">
+            <dt>Decode step</dt>
+            <dd><span class="stat-value">5.69<span class="stat-unit">ms</span></span><span class="stat-note">4 concurrent sequences, FP8 KV cache</span></dd>
+          </div>
+          <div class="stat">
+            <dt>Max context</dt>
+            <dd><span class="stat-value">344k<span class="stat-unit">tokens</span></span><span class="stat-note">380k-token KV cache pool</span></dd>
+          </div>
+          <div class="stat">
+            <dt>Four agents at once</dt>
+            <dd><span class="stat-value stat-key">~920<span class="stat-unit">tok/s total</span></span><span class="stat-note">4 agents at 10k context each; ~670 at 90k</span></dd>
+          </div>
+          <div class="stat">
+            <dt>Single stream</dt>
+            <dd><span class="stat-value stat-key">340<span class="stat-unit">tok/s</span></span><span class="stat-note">on code; 330 on JSON, 253 on prose</span></dd>
+          </div>
+          <div class="stat">
+            <dt>Power draw</dt>
+            <dd><span class="stat-value">~430<span class="stat-unit">W</span></span><span class="stat-note">RTX 5090, 4 agents running</span></dd>
+          </div>
+          <div class="stat">
+            <dt>GPU temperature</dt>
+            <dd><span class="stat-value">~65<span class="stat-unit">°C</span></span><span class="stat-note">RTX 5090, 4 agents running</span></dd>
+          </div>
+        </dl>
+        <p class="stats-footnote">All speeds at temperature 1.0, the model's default sampling (not greedy).</p>
+        </div>
+
+        <figure class="minichart" aria-labelledby="minichart-cap">
+          <figcaption id="minichart-cap">Four concurrent agent streams, total tok/s with all four decoding, by context per stream</figcaption>
+          <ul class="minichart-rows">
+            <li><span class="minichart-label">~10k</span><span class="minichart-track" aria-hidden="true"><span class="minichart-bar" style="width: 92%"></span></span><span class="minichart-value">~920</span></li>
+            <li><span class="minichart-label">~90k</span><span class="minichart-track" aria-hidden="true"><span class="minichart-bar" style="width: 67%"></span></span><span class="minichart-value">~670</span></li>
+          </ul>
+        </figure>
+
+        <section class="spec" aria-labelledby="spec-title">
+          <h3 id="spec-title">Precision</h3>
+          <p class="spec-note">DSpark drafter: 3 layers, proposes 7 tokens.</p>
+          <dl class="spec-list">
+            <div><dt>Routed MoE experts</dt><dd>NVFP4, as shipped in the checkpoint; layers 20–23 in MXFP8</dd></div>
+            <div><dt>Attention projections, all 24 layers (fused qkv and output)</dt><dd>FP8 E4M3 weights with per-row scales; activations FP8 per-token in prefill (W8A8), BF16 in decode</dd></div>
+            <div><dt>LM head, shared with the drafter</dt><dd>FP8 E4M3</dd></div>
+            <div><dt>DSpark drafter attention (qkv, context kv, output) and MLP (gate-up, down)</dt><dd>FP8 E4M3</dd></div>
+            <div><dt>DSpark drafter 16,384-token draft head and Markov head</dt><dd>BF16</dd></div>
+            <div><dt>Embeddings, router, loop gates, norms, short convolutions</dt><dd>BF16</dd></div>
+            <div><dt>KV cache</dt><dd>FP8</dd></div>
+          </dl>
+        </section>
       </div>
     </section>
 
-    <!-- Home Header -->
-    <div class="home-header">
-      <p class="label">Platform Q · Artificial Intelligence</p>
-      <h1>
-        When agents build the software,<br>
-        <em>what's left to write about?</em>
-      </h1>
-      <p class="tagline">
-        Strategic analysis, architecture deep-dives, and original research for the agentic era.
-      </p>
-    </div>
-
-    <%
-      posts_collection = Map.get(@collections, "posts")
-      posts = if posts_collection, do: posts_collection.pages, else: []
-      sorted_posts = Enum.sort_by(posts, &(&1.date), {:desc, Date})
-      {hero_list, rest} = Enum.split(sorted_posts, 1)
-      hero = List.first(hero_list)
-      {sidebar_posts, rest} = Enum.split(rest, 3)
-      {grid_posts, _} = Enum.split(rest, 4)
-    %>
-
-    <%
-      show_sidebar = length(sorted_posts) > 1
-      section_class = if show_sidebar, do: "featured-section", else: "featured-section single-post"
-      hero_class = if show_sidebar, do: "hero-post", else: "hero-post hero-post-full"
-    %>
-    <section class="<%= section_class %>">
-      <!-- Left: Hero -->
-      <div class="<%= hero_class %>">
-        <%= if hero do %>
-          <%
-            safe_image = fn img ->
-              img = img || ""
-              if String.match?(img, ~r/^https?:\/\//) or String.match?(img, ~r/^\//) or String.match?(img, ~r/^\.\.?\//), do: String.replace(img, ~r/['"\\();\n\r]/, ""), else: ""
-            end
-            image = safe_image.(hero.frontmatter["image"]) || "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80"
-            date = if hero.date, do: Calendar.strftime(hero.date, "%B %d, %Y"), else: ""
-            url = String.trim_leading(hero.url || "", "/")
-            intro = hero.frontmatter["intro"] || hero.frontmatter["description"] || "Check out this latest post from our team."
-          %>
-          <div class="hero-image" style="background-image: url('<%= image %>')"></div>
-          <div class="hero-content">
-            <h2><a href="<%= url %>"><%= hero.title %></a></h2>
-            <p><%= intro %></p>
-            <div class="meta">
-              <span class="date"><%= date %></span>
-            </div>
-          </div>
-        <% else %>
-          <div class="hero-content">
-            <h2>No posts found.</h2>
-            <p>Please add some posts to the content/posts directory.</p>
-          </div>
-        <% end %>
+    <section class="writing wrap" aria-labelledby="writing-title">
+      <div class="section-head">
+        <h2 id="writing-title">Writing</h2>
+        <a class="section-link" href="posts/index.html">All posts <span aria-hidden="true">→</span></a>
       </div>
-
-      <%= if show_sidebar do %>
-      <!-- Right: Sidebar -->
-      <div class="sidebar-posts">
-        <h3>Latest</h3>
-        <div class="divider"></div>
-        <%= for post <- sidebar_posts do %>
-          <%
-            date = if post.date, do: Calendar.strftime(post.date, "%B %d, %Y"), else: ""
-            url = String.trim_leading(post.url || "", "/")
-            intro = post.frontmatter["intro"] || post.frontmatter["description"] || ""
-          %>
-          <div class="sidebar-post-item">
-            <h4><a href="<%= url %>"><%= post.title %></a></h4>
-            <%= if intro != "" do %>
-              <p class="sidebar-intro"><%= intro %></p>
-            <% end %>
-            <div class="meta">
-              <span class="date"><%= date %></span>
-            </div>
-          </div>
-        <% end %>
-      </div>
+      <%= if sorted_posts == [] do %>
+        <p class="empty">No posts yet.</p>
+      <% else %>
+        <ol class="post-list">
+          <%= for post <- sorted_posts do %>
+            <%
+              href = String.trim_leading(post.url || "", "/")
+              fm = post.frontmatter || %{}
+              intro = fm["intro"] || fm["description"] || ""
+              category = fm["category"]
+            %>
+            <li class="post-row">
+              <div class="post-row-meta">
+                <%= if post.date do %><time datetime="<%= Calendar.strftime(post.date, "%Y-%m-%d") %>"><%= Calendar.strftime(post.date, "%d %b %Y") %></time><% end %>
+                <%= if category do %><span class="post-row-cat"><%= category %></span><% end %>
+              </div>
+              <div class="post-row-body">
+                <h3><a href="<%= href %>"><%= post.title %></a></h3>
+                <%= if intro != "" do %><p><%= intro %></p><% end %>
+              </div>
+            </li>
+          <% end %>
+        </ol>
       <% end %>
     </section>
-
-    <!-- Bottom: Grid -->
-    <section class="posts-grid">
-      <%= for post <- grid_posts do %>
-        <%
-          safe_image = fn img ->
-            img = img || ""
-            if String.match?(img, ~r/^https?:\/\//) or String.match?(img, ~r/^\//) or String.match?(img, ~r/^\.\.?\//), do: String.replace(img, ~r/['"\\();\n\r]/, ""), else: ""
-          end
-          image = safe_image.(post.frontmatter["image"]) || "https://images.unsplash.com/photo-1499750310159-5254f4197283?auto=format&fit=crop&w=600&q=80"
-          date = if post.date, do: Calendar.strftime(post.date, "%B %d, %Y"), else: ""
-          url = String.trim_leading(post.url || "", "/")
-          intro = post.frontmatter["intro"] || post.frontmatter["description"] || "Read more about this topic..."
-        %>
-        <div class="grid-post-card">
-          <div class="card-image" style="background-image: url('<%= image %>')"></div>
-          <div class="card-content">
-            <h4><a href="<%= url %>"><%= post.title %></a></h4>
-            <p><%= intro %></p>
-            <div class="meta">
-              <span class="date"><%= date %></span>
-            </div>
-          </div>
-        </div>
-      <% end %>
-    </section>
-
-  </div>
-  <script src="./js/app.js"></script>
+  </main>
   <%= render_partial("footer.html", assigns) %>
 </body>
 </html>

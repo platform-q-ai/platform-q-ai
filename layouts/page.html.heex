@@ -3,56 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= @page.title %> - <%= @site.title %></title>
-  <%= render_partial("head_fonts.html", assigns) %>
-  <link rel="stylesheet" href="../css/app.css">
-  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <link rel="shortcut icon" href="/favicon.ico" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-  <link rel="manifest" href="/site.webmanifest" />
+  <title><%= if @page.title in [nil, "", "Platform Q"], do: "Platform Q", else: @page.title <> " - Platform Q" %></title>
+  <%= render_partial("head.html", assigns) %>
 </head>
 <body>
   <%= render_partial("nav.html", assigns) %>
-  <div class="container-custom">
-
-    <!-- Header Section -->
-    <div class="header-grid<%= if !@page.frontmatter["intro"], do: " header-grid-full" %>">
-      <div class="title-col">
+  <%= render_partial("prose.html", assigns) %>
+  <% fm = @page.frontmatter || %{} %>
+  <main id="main">
+    <article class="page">
+      <header class="post-header wrap">
+        <p class="eyebrow eyebrow-accent">Platform Q</p>
         <h1><%= @page.title %></h1>
-        <div class="category-wrapper">
-          <div class="category-line"></div>
-          <span class="category">Page</span>
-        </div>
+        <%= if fm["subtitle"] do %><p class="lede"><%= fm["subtitle"] %></p><% end %>
+      </header>
+      <div class="prose wrap<%= if fm["lead"] == true, do: " prose-lead" %>">
+        <%= prose_html %>
       </div>
-      <%= if @page.frontmatter["intro"] do %>
-        <div class="intro-col">
-          <p class="header-intro"><%= @page.frontmatter["intro"] %></p>
-        </div>
-      <% end %>
-    </div>
-
-    <!-- Hero Image -->
-    <%= if @page.frontmatter["image"] do %>
-      <div class="hero-image-container">
-        <img src="<%= @page.frontmatter["image"] %>" alt="<%= @page.title %>" class="hero-image">
-      </div>
-    <% end %>
-
-    <!-- Post Details -->
-    <%= if @page.frontmatter["subtitle"] do %>
-      <div class="post-details">
-        <h3><%= @page.frontmatter["subtitle"] %></h3>
-      </div>
-    <% end %>
-
-    <!-- Main Content -->
-    <div class="content-body">
-      <%= String.replace(@content, "<p>---</p>", "<hr>") %>
-    </div>
-
-  </div>
-  <script src="../js/app.js"></script>
+    </article>
+  </main>
   <%= render_partial("footer.html", assigns) %>
 </body>
 </html>

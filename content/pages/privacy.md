@@ -75,6 +75,4 @@ We may update this Privacy Policy from time to time. Changes will be posted on t
 
 If you have any questions about this Privacy Policy, please contact us at:
 
-**Platform Q Artificial Intelligence Limited**
-Email: [privacy@platformq.ai](mailto:privacy@platformq.ai)
-Website: [https://platformq.ai](https://platformq.ai)
+**Platform Q Artificial Intelligence Limited**<br>Email: [privacy@platformq.ai](mailto:privacy@platformq.ai)<br>Website: [https://platformq.ai](https://platformq.ai)

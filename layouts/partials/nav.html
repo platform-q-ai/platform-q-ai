@@ -1,33 +1,31 @@
 <%
-  # Determine the relative path prefix based on page depth
-  url = cond do
-    is_nil(assigns) -> ""
-    is_map(assigns) && is_map_key(assigns, :page) ->
-      page = assigns[:page]
-      cond do
-        is_nil(page) -> ""
-        is_struct(page) && is_map_key(page, :url) -> page.url
-        is_map(page) -> Map.get(page, :url, "")
-        true -> ""
-      end
-    true -> ""
+  nav_page = if is_map(assigns), do: Map.get(assigns, :page), else: nil
+  nav_url = if is_map(nav_page), do: Map.get(nav_page, :url) || "", else: ""
+  nav_parts = String.split(nav_url, "/", trim: true)
+  base = if length(nav_parts) > 1, do: "..", else: "."
+  nav_section = case nav_parts do
+    ["posts" | _] -> "posts"
+    ["tags" | _] -> "posts"
+    ["categories" | _] -> "posts"
+    ["pages", "about.html"] -> "about"
+    ["index.html"] -> "home"
+    _ -> "other"
   end
-  
-  url_parts = String.split(url || "", "/", trim: true)
-  base = if length(url_parts) > 1, do: "..", else: "."
+  nav_current = fn section -> if section == nav_section, do: ~s( aria-current="page"), else: "" end
 %>
-<nav class="site-nav">
-  <div class="nav-container">
-    <div class="site-logo">
-      <a href="<%= base %>/index.html">
-        <img src="<%= base %>/images/pq-logo-nav.webp" alt="<%= @site.title %>" width="60" height="60" style="vertical-align: middle;">
-      </a>
-    </div>
-    <ul>
-      <li><a href="<%= base %>/index.html">Home</a></li>
-      <li><a href="<%= base %>/posts/index.html">Posts</a></li>
-      <li><a href="https://failordie.com" target="_blank" rel="noopener noreferrer" aria-label="Research — opens failordie.com in a new tab">Research ↗</a></li>
-      <li><a href="<%= base %>/pages/about.html">About</a></li>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <nav class="site-nav wrap" aria-label="Main">
+    <a class="brand" href="<%= base %>/index.html">
+      <img src="<%= base %>/images/pq-logo-nav.webp" alt="" width="36" height="36">
+      <span class="brand-name">Platform Q</span>
+      <span class="visually-hidden"> home</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="<%= base %>/index.html"<%= nav_current.("home") %>>Home</a></li>
+      <li><a href="<%= base %>/posts/index.html"<%= nav_current.("posts") %>>Posts</a></li>
+      <li><a href="https://github.com/platform-q-ai/inkling-mini-5090" rel="noopener noreferrer">Code<span aria-hidden="true">&nbsp;↗</span></a></li>
+      <li><a href="<%= base %>/pages/about.html"<%= nav_current.("about") %>>About</a></li>
     </ul>
-  </div>
-</nav>
+  </nav>
+</header>

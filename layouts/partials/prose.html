@@ -1,0 +1,9 @@
+<%
+  # Clean up the markdown parser's output: raw HTML blocks arrive wrapped in <p>,
+  # and wide tables need a focusable scroll region.
+  prose_html = (@content || "")
+    |> String.replace("<p>---</p>", "<hr>")
+    |> String.replace(~r{<p>(<div class="table-wrap[^"]*">.*?</div>)</p>}s, "\\1")
+    |> String.replace(~r{<p>(<ol>.*?</ol>)</p>}s, "\\1")
+    |> String.replace(~r{<div class="(table-wrap[^"]*)">}, ~s(<div class="\\1" role="region" aria-label="Table, scrolls sideways" tabindex="0">))
+%>
