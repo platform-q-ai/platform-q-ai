@@ -1311,3 +1311,10 @@ a:focus-visible {
     font-size: 2rem;
   }
 }
+
+/* Tables in posts */
+.content-body .table-wrap { overflow-x: auto; margin: 1.5rem 0; }
+.content-body table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+.content-body th, .content-body td { text-align: left; padding: 0.55rem 0.8rem; border-bottom: 1px solid rgba(127, 127, 127, 0.25); vertical-align: top; }
+.content-body th { font-family: 'DM Mono', monospace; font-weight: 500; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.04em; }
+.content-body td:not(:first-child), .content-body th:not(:first-child) { white-space: nowrap; }
