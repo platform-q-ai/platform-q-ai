@@ -45,21 +45,20 @@
             <dd><span class="stat-value">344k<span class="stat-unit">tokens</span></span><span class="stat-note">380k-token KV cache pool</span></dd>
           </div>
           <div class="stat">
-            <dt>Coding agents at once</dt>
-            <dd><span class="stat-value">4<span class="stat-unit">× ~165 tok/s</span></span><span class="stat-note">each with 90k tokens of context</span></dd>
+            <dt>Four agents at once</dt>
+            <dd><span class="stat-value">~670<span class="stat-unit">tok/s total</span></span><span class="stat-note">4 agents at 90k context each</span></dd>
           </div>
           <div class="stat">
             <dt>Single stream</dt>
-            <dd><span class="stat-value">324<span class="stat-unit">tok/s</span></span><span class="stat-note">on code; 331 on JSON, 253 on prose</span></dd>
+            <dd><span class="stat-value">340<span class="stat-unit">tok/s</span></span><span class="stat-note">on code; 330 on JSON, 253 on prose</span></dd>
           </div>
         </dl>
 
         <figure class="minichart" aria-labelledby="minichart-cap">
-          <figcaption id="minichart-cap">Four concurrent agent streams, total tok/s by context per stream</figcaption>
+          <figcaption id="minichart-cap">Four concurrent agent streams, total tok/s with all four decoding, by context per stream</figcaption>
           <ul class="minichart-rows">
-            <li><span class="minichart-label">~10k</span><span class="minichart-track" aria-hidden="true"><span class="minichart-bar" style="width: 74.6%"></span></span><span class="minichart-value">746</span></li>
-            <li><span class="minichart-label">~90k</span><span class="minichart-track" aria-hidden="true"><span class="minichart-bar" style="width: 56.3%"></span></span><span class="minichart-value">563</span></li>
-            <li><span class="minichart-label">~150k</span><span class="minichart-track" aria-hidden="true"><span class="minichart-bar" style="width: 16.2%"></span></span><span class="minichart-value">162</span></li>
+            <li><span class="minichart-label">~10k</span><span class="minichart-track" aria-hidden="true"><span class="minichart-bar" style="width: 92%"></span></span><span class="minichart-value">~920</span></li>
+            <li><span class="minichart-label">~90k</span><span class="minichart-track" aria-hidden="true"><span class="minichart-bar" style="width: 67%"></span></span><span class="minichart-value">~670</span></li>
           </ul>
         </figure>
       </div>

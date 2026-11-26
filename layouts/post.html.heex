@@ -36,7 +36,7 @@
 
       <%= if image_src != "" do %>
         <figure class="post-figure wrap">
-          <img src="<%= image_src %>" alt="<%= image_alt %>" width="1200" height="760">
+          <img src="<%= image_src %>" alt="<%= image_alt %>" width="1200" height="<%= round(fm["image_height"] || 760) %>">
         </figure>
       <% end %>
 

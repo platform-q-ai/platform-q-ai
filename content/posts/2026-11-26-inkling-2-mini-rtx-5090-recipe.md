@@ -5,8 +5,9 @@ draft: false
 layout: post
 tags: ["inkling", "vllm", "rtx-5090", "inference", "fp8"]
 category: "Inference"
-intro: "A set of vLLM patches that optimises Inkling 2 Mini on one RTX 5090 for long-running agentic tasks and coding: a 5.69 ms decode step, 344k tokens of context, and four coding agents at about 165 tok/s each with 90k tokens of context."
-image_alt: "Bar chart of four concurrent agent streams on one RTX 5090: total throughput 746 tok/s at about 10k tokens of context per stream, 563 at 90k and 162 at 150k."
+intro: "A set of vLLM patches that optimises Inkling 2 Mini on one RTX 5090 for long-running agentic tasks and coding: a 5.69 ms decode step, 344k tokens of context, and four coding agents at about 670 tok/s in total with 90k tokens of context each."
+image_alt: "Bar chart of four concurrent agent streams on one RTX 5090: total throughput with all four decoding is about 920 tok/s at about 10k tokens of context per stream and about 670 at 90k."
+image_height: 570
 image: "/images/inkling-recipe.svg"
 author: "Platform Q.ai"
 ---
@@ -19,15 +20,13 @@ The result is a set of vLLM patches, open source under Apache-2.0: **[github.com
 
 Measured on one RTX 5090 with 4 concurrent sequences, FP8 KV cache, and the model's DSpark drafter proposing 7 tokens.
 
-<div class="table-wrap"><table><thead><tr><th>measure</th><th>our figures</th></tr></thead><tbody><tr><td>decode step</td><td>5.69 ms</td></tr><tr><td>single stream, tok/s (code / JSON / prose)</td><td>324 / 331 / 253</td></tr><tr><td>prefill tok/s at 60k / 150k tokens</td><td>11.0k / 7.25k</td></tr><tr><td>KV cache pool</td><td>380k tokens</td></tr><tr><td>max context</td><td>344k tokens</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>measure</th><th>our figures</th></tr></thead><tbody><tr><td>decode step</td><td>5.69 ms</td></tr><tr><td>single stream, tok/s (code / JSON / prose)</td><td>340 / 330 / 253</td></tr><tr><td>prefill</td><td>~11k tok/s</td></tr><tr><td>KV cache pool</td><td>380k tokens</td></tr><tr><td>max context</td><td>344k tokens</td></tr></tbody></table></div>
 
 ### Four coding agents at once
 
 What matters for agents is several long conversations at the same time, not dozens of short chats. We sent four requests at once. Each held a different slice of a real Rust codebase plus a coding task, with no prefix shared between them. "Warm" repeats them with each prompt already cached, as in a running agent session.
 
-<div class="table-wrap"><table><thead><tr><th>context per stream</th><th>total tok/s</th><th>per stream</th><th>time to first token</th></tr></thead><tbody><tr><td>~10k</td><td>746 (about 920 while all four decode)</td><td>186–282</td><td>1.1 s</td></tr><tr><td>~90k</td><td>563 (about 670 while all four decode)</td><td>147–196</td><td>2.7 s</td></tr><tr><td>~150k</td><td>162</td><td>71–305</td><td>2–83 s</td></tr></tbody></table></div>
-
-At about 150k each, four contexts need about 600k tokens of KV cache, and the card holds 380k. vLLM runs about two at a time and evicts the others' cached prompts. At that length, two agents is the practical limit for one card.
+<div class="table-wrap"><table><thead><tr><th>context per stream</th><th>total tok/s with all 4 decoding</th><th>per stream</th><th>time to first token</th></tr></thead><tbody><tr><td>~10k</td><td>~920</td><td>186–282</td><td>1.1 s</td></tr><tr><td>~90k</td><td>~670</td><td>147–196</td><td>2.7 s</td></tr></tbody></table></div>
 
 At four streams the card draws about 430 W and runs at about 65 °C.
 

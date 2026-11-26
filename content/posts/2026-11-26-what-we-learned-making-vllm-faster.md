@@ -6,7 +6,8 @@ layout: post
 tags: ["inkling", "vllm", "rtx-5090", "profiling", "kernels"]
 category: "Research"
 intro: "Optimising Inkling 2 Mini on one RTX 5090 for long-running agentic tasks and coding: what the profiles showed, the changes that paid off, the ones that didn't, and how we kept accuracy honest."
-image_alt: "Bar chart of single-stream decode throughput on one RTX 5090: 324 tok/s on code, 331 on JSON and 253 on prose."
+image_alt: "Bar chart of single-stream decode throughput on one RTX 5090: 340 tok/s on code, 330 on JSON and 253 on prose."
+image_height: 720
 image: "/images/inkling-lessons.svg"
 author: "Platform Q.ai"
 ---
@@ -73,7 +74,7 @@ A change counted as accuracy-neutral only if it stayed inside that band. That's 
 
 ## 10. For agents, KV memory is the limit
 
-Four streams at 10k tokens of context each decode at about 750–920 tok/s in total. At 90k each they still reach about 560–670. At 150k each, four contexts don't fit in 32 GB at all, so they take turns.
+Four streams at 10k tokens of context each decode at about 920 tok/s in total. At 90k each they still reach about 670.
 
 Benchmarks with dozens of short chats measure batching. Agent work is a few long conversations, and there every token of KV cache counts. That's why we spent the FP8 savings on context rather than more batch slots.
 
