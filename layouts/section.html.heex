@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= if @page.title in [nil, "", "Platform Q"], do: "Platform Q", else: @page.title <> " - Platform Q" %></title>
+  <%= render_partial("head.html", assigns) %>
+</head>
+<body>
+  <%= render_partial("nav.html", assigns) %>
+  <%= render_partial("prose.html", assigns) %>
+  <%
+    fm = @page.frontmatter || %{}
+    section = fm["section"]
+    posts_collection = Map.get(@collections || %{}, "posts")
+    posts = if posts_collection, do: posts_collection.pages, else: []
+    items =
+      posts
+      |> Enum.filter(fn p -> is_binary(section) and Map.get(p.frontmatter || %{}, "section") == section end)
+      |> Enum.sort_by(&(&1.date), {:desc, DateTime})
+    key = fn p, k -> Map.get(p.frontmatter || %{}, k) || "Other" end
+    by_lab = Enum.group_by(items, &key.(&1, "lab")) |> Enum.sort_by(fn {lab, _} -> lab end)
+  %>
+  <main id="main">
+    <article class="page">
+      <header class="post-header wrap">
+        <p class="eyebrow eyebrow-accent"><%= fm["eyebrow"] || "Platform Q" %></p>
+        <h1><%= @page.title %></h1>
+        <%= if fm["subtitle"] do %><p class="lede"><%= fm["subtitle"] %></p><% end %>
+      </header>
+      <div class="prose wrap">
+        <%= prose_html %>
+      </div>
+      <div class="section-index wrap">
+        <%= if items == [] do %>
+          <p class="empty"><%= fm["empty"] || "Nothing published here yet." %></p>
+        <% else %>
+          <%= for {lab, lab_items} <- by_lab do %>
+            <section class="lab-group" aria-labelledby="lab-<%= lab |> String.downcase() |> String.replace(~r/[^a-z0-9]+/, "-") %>">
+              <h2 class="lab-name" id="lab-<%= lab |> String.downcase() |> String.replace(~r/[^a-z0-9]+/, "-") %>"><%= lab %></h2>
+              <%= for {model, model_items} <- Enum.group_by(lab_items, &key.(&1, "model")) |> Enum.sort_by(fn {m, _} -> m end) do %>
+                <div class="model-group">
+                  <h3 class="model-name"><%= model %></h3>
+                  <ol class="post-list">
+                    <%= for post <- model_items do %>
+                      <%
+                        href = String.trim_leading(post.url || "", "/")
+                        pfm = post.frontmatter || %{}
+                        intro = pfm["intro"] || pfm["description"] || ""
+                      %>
+                      <li class="post-row">
+                        <div class="post-row-meta">
+                          <%= if pfm["variant"] do %><span class="post-row-cat"><%= pfm["variant"] %></span><% end %>
+                          <%= if pfm["status"] do %><span><%= pfm["status"] %></span><% end %>
+                          <%= if post.date do %><time datetime="<%= Calendar.strftime(post.date, "%Y-%m-%d") %>"><%= Calendar.strftime(post.date, "%d %b %Y") %></time><% end %>
+                        </div>
+                        <div class="post-row-body">
+                          <h4><a href="../<%= href %>"><%= post.title %></a></h4>
+                          <%= if intro != "" do %><p><%= intro %></p><% end %>
+                        </div>
+                      </li>
+                    <% end %>
+                  </ol>
+                </div>
+              <% end %>
+            </section>
+          <% end %>
+        <% end %>
+      </div>
+    </article>
+  </main>
+  <%= render_partial("footer.html", assigns) %>
+</body>
+</html>
