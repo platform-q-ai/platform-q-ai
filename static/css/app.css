@@ -401,8 +401,10 @@ p { margin: 0; }
 .prose h2 + *, .prose h3 + * { margin-top: 0.75em; }
 .prose strong { font-weight: 600; }
 .prose ul { padding-left: 1.25em; }
+.prose ol { padding-left: 1.5em; }
 .prose li + li { margin-top: 0.5em; }
 .prose li::marker { color: var(--accent); }
+.prose ol > li::marker { font-family: var(--font-mono); font-size: 0.875em; color: var(--accent-text); }
 .prose hr { border: 0; border-top: 1px solid var(--rule); margin-block: 2.5em; }
 .prose blockquote {
   margin-inline: 0;

@@ -8,7 +8,7 @@ text{font-family:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-
 <rect class="bg" width="1200" height="760"/>
 <rect class="bar" x="60" y="56" width="48" height="6"/>
 <text class="t" x="60" y="116" font-size="42" font-weight="600">Single-stream decode on one RTX 5090</text>
-<text class="m" x="60" y="160" font-size="28">Inkling 2 Mini · tok/s by kind of output · 5.69 ms decode step</text>
+<text class="m" x="60" y="160" font-size="28">Inkling 2 Mini · tok/s by kind of output</text>
 <text class="t mono" x="60" y="240" font-size="34" font-weight="500">code</text>
 <text class="t mono" x="1140" y="240" font-size="34" text-anchor="end">340 tok/s</text>
 <rect class="track" x="60" y="260" width="1080" height="48" rx="4"/>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= @page.title %> - <%= @site.title %></title>
+  <title><%= if @page.title in [nil, "", "Platform Q"], do: "Platform Q", else: @page.title <> " - Platform Q" %></title>
   <%= render_partial("head.html", assigns) %>
 </head>
 <body>
@@ -16,7 +16,7 @@
       <%= if fm["description"] do %><p class="lede"><%= fm["description"] %></p><% end %>
     </header>
     <div class="collection wrap">
-      <%= @content %>
+      <%= (@content || "") |> String.replace(~s(<h3 class="post-title">), ~s(<h2 class="post-title">)) |> String.replace(~r{(<h2 class="post-title">.*?)</h3>}s, "\\1</h2>") %>
     </div>
   </main>
   <%= render_partial("footer.html", assigns) %>

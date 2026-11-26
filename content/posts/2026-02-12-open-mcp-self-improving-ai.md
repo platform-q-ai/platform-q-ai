@@ -12,7 +12,7 @@ author: "Shane Quigley"
 
 We promised you the framework.
 
-In [Build or Die](/posts/2026-01-23-build-or-die), we made the case: companies that rely on SaaS will lose to competitors who own their software. In [Clean Architecture + The 7-Gate Gauntlet](/posts/2026-01-28-clean-architecture-7-gate-gauntlet), we showed you how to constrain LLMs with architectural boundaries and enforce quality with 41 guardrails across 7 gates.
+In [Build or Die](2026-01-23-build-or-die.html), we made the case: companies that rely on SaaS will lose to competitors who own their software. In [Clean Architecture + The 7-Gate Gauntlet](2026-01-28-clean-architecture-7-gate-gauntlet.html), we showed you how to constrain LLMs with architectural boundaries and enforce quality with 41 guardrails across 7 gates.
 
 You asked: "Where's the scaffold?"
 
@@ -24,7 +24,7 @@ One command. Production-ready. But here's what we didn't expect -- it enables se
 
 LLMs write broken code because they have no constraints. TODO comments everywhere. `as any` type hacks. Layer violations. Zero test coverage. The output _looks_ right, but it cuts every corner it can find.
 
-[Clean Architecture = Clean Context](/posts/2026-01-28-clean-architecture-7-gate-gauntlet). When you constrain the LLM with strict layer boundaries, it can't sprawl and it can't cheat. But knowing the theory isn't enough. You need a scaffold that **enforces** this from the first line of code.
+[Clean Architecture = Clean Context](2026-01-28-clean-architecture-7-gate-gauntlet.html). When you constrain the LLM with strict layer boundaries, it can't sprawl and it can't cheat. But knowing the theory isn't enough. You need a scaffold that **enforces** this from the first line of code.
 
 ## The Scaffold: Clean Context in a Box
 
@@ -54,11 +54,7 @@ Version 1.6.1 on npm. Battle-tested across real projects.
 
 Whether you're using Claude, opencode.ai, or any MCP-compatible system, the workflow is the same:
 
-1. **The LLM reads AGENTS.md** and understands the architecture, the layer boundaries, and the conventions
-2. **It follows the dependency rules**: Domain imports nothing external. Application imports only Domain. Infrastructure implements Application ports.
-3. **It writes Gherkin feature files first** -- behaviour before implementation
-4. **It implements until all 41 guardrails pass** -- no shortcuts, no escape hatches
-5. **It ships production-ready code** that satisfies both the type system and the business requirements
+<ol><li>**The LLM reads AGENTS.md** and understands the architecture, the layer boundaries, and the conventions</li><li>**It follows the dependency rules**: Domain imports nothing external. Application imports only Domain. Infrastructure implements Application ports.</li><li>**It writes Gherkin feature files first** -- behaviour before implementation</li><li>**It implements until all 41 guardrails pass** -- no shortcuts, no escape hatches</li><li>**It ships production-ready code** that satisfies both the type system and the business requirements</li></ol>
 
 The LLM can't cheat. Either every check passes, or it doesn't ship. The scaffold is the constraint, and the constraint is what makes the output reliable.
 
@@ -74,11 +70,7 @@ Self-improving AI. Controlled. Safe. Real.
 
 This isn't science fiction. It's happening now:
 
-1. The LLM identifies a missing capability
-2. It writes a feature file: `Given I need to fetch weather data...`
-3. It creates the domain entity, use case, and MCP tool -- following the architecture
-4. All 41 guardrails catch any mistakes along the way
-5. The new tool is available for the next task
+<ol><li>The LLM identifies a missing capability</li><li>It writes a feature file: `Given I need to fetch weather data...`</li><li>It creates the domain entity, use case, and MCP tool -- following the architecture</li><li>All 41 guardrails catch any mistakes along the way</li><li>The new tool is available for the next task</li></ol>
 
 The scaffold **is** the safety net. The same architectural boundaries and quality gates that make LLM-generated code production-ready also make self-extension safe. The AI can't add a tool that violates the architecture. It can't ship a capability without test coverage. It can't bypass validation. The guardrails apply to self-generated tools exactly as they apply to human-requested ones.
 
@@ -92,6 +84,6 @@ Each step depends on the one before it. You can't have safe self-improving AI wi
 
 Companies using raw LLM output without guardrails rebuild the same scaffold every project, ship broken code, and can't let AI improve itself safely. Companies with the right scaffold own their tools **and** their evolution.
 
-[Build or Die](/posts/2026-01-23-build-or-die). And if you're going to build, build on a scaffold that grows with you.
+[Build or Die](2026-01-23-build-or-die.html). And if you're going to build, build on a scaffold that grows with you.
 
 `npx @pqai/mcp-4-llm` -- and start building.

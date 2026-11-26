@@ -58,13 +58,7 @@ The LLM can't sprawl. It can't couple. It can't create spaghetti. The architectu
 
 But architecture alone isn't enough. You need enforcement. We built a 7-gate gauntlet that every single commit runs through before it touches the codebase:
 
-1. **LLM-aware code quality** -- A 300+ line script that catches everything LLMs try to sneak past
-2. **ESLint with Clean Architecture boundaries** -- Architectural layer violations are build failures, not warnings
-3. **Prettier formatting** -- Consistent code style, zero debates
-4. **TypeScript type checking** -- Full strict mode, no exceptions
-5. **Full compilation** -- If it doesn't compile, it doesn't exist
-6. **Vitest with 80% coverage minimum** -- No coverage, no merge
-7. **Cucumber BDD feature tests** -- Business behaviour verified end-to-end
+<ol><li>**LLM-aware code quality** -- A 300+ line script that catches everything LLMs try to sneak past</li><li>**ESLint with Clean Architecture boundaries** -- Architectural layer violations are build failures, not warnings</li><li>**Prettier formatting** -- Consistent code style, zero debates</li><li>**TypeScript type checking** -- Full strict mode, no exceptions</li><li>**Full compilation** -- If it doesn't compile, it doesn't exist</li><li>**Vitest with 80% coverage minimum** -- No coverage, no merge</li><li>**Cucumber BDD feature tests** -- Business behaviour verified end-to-end</li></ol>
 
 Every. Single. Commit.
 
@@ -111,4 +105,4 @@ The equation is straightforward:
 
 **Clean Architecture + 7-Gate Pipeline = Shippable code from LLMs.**
 
-The paradigm has shifted. It's no longer Build or Buy. It's [Build or Die](/posts/2026-01-23-build-or-die). But if you're going to build with AI, build with guardrails -- or you're just dying faster with better tooling.
+The paradigm has shifted. It's no longer Build or Buy. It's [Build or Die](2026-01-23-build-or-die.html). But if you're going to build with AI, build with guardrails -- or you're just dying faster with better tooling.

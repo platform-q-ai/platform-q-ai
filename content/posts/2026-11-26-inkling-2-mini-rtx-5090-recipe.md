@@ -9,6 +9,7 @@ intro: "A set of vLLM patches that optimises Inkling 2 Mini on one RTX 5090 for 
 image_alt: "Bar chart of four concurrent agent streams on one RTX 5090: total throughput with all four decoding is about 920 tok/s at about 10k tokens of context per stream and about 670 at 90k."
 image_height: 610
 image: "/images/inkling-recipe.svg"
+description: "vLLM patches that run Inkling 2 Mini on one RTX 5090 for agentic coding: 5.69 ms decode step, 344k context, ~920 tok/s across four agents at 10k context."
 author: "Platform Q.ai"
 ---
 
@@ -32,16 +33,16 @@ At four streams the card draws about 430 W and runs at about 65 °C.
 
 ### Accuracy
 
-With FP8, the model's next token matches the full-precision reference 95.7% of the time, over about 11,000 positions including a 57,556-token real-code prompt. The reference matches itself 96.4% of the time from run to run; that's the noise floor from sampling and kernel order. These agreement figures are greedy, teacher-forced comparisons against the reference.
+With FP8, the model's next token matches the full-precision reference 95.7% of the time, over about 11,000 positions including a 57,556-token real-code prompt. The reference matches itself 96.4% of the time from run to run; that's the noise floor from kernel order and floating-point non-determinism. These agreement figures are greedy, teacher-forced comparisons against the reference.
 
-The decode changes on their own don't change accuracy: 96.5%. The small drop comes from running prefill in FP8. If you'd rather keep prefill in BF16, one switch (`E22_DENSE_FP8=1`) does that. It measures 96.1% and leaves about 115k fewer tokens of KV pool.
+The decode changes on their own don't change accuracy: 96.5%. The small drop comes from running prefill in FP8. If you'd rather keep prefill in BF16, one switch (`E22_DENSE_FP8=1`) does that. It measures 96.1% and costs about 115k tokens of KV pool.
 
 ## What changed
 
-- **FP8 dense layers and LM head.** The dense projections and the head are stored in FP8 (per-channel weight scales, per-token activation scales), and their BF16 copies are freed. That memory goes to the KV cache, which is where the extra context comes from. The vLLM image has no sm_120 FP8 CUTLASS kernel, so prefill runs on a Triton W8A8 GEMM.
+- **FP8 dense layers and LM head.** The dense projections and the head are stored in FP8 (per-channel weight scales, per-token activation scales), and their BF16 copies are freed. That memory goes to the KV cache, which is where the extra context comes from. For prefill, we wrote our own Triton W8A8 GEMM and FP8 quantisation kernels for the RTX 5090 (sm_120).
 - **Decode kernels.** Programmatic dependent launch chained across kernels, so each kernel loads its weights while the previous one finishes; one launch for several projections; split-K where a small GEMM left the GPU idle; better MoE tiles; and split-KV local attention with an exact combine.
-- **Speculative decoding:** adaptive verification, so only drafts likely to be accepted are verified, and a 16k-token draft vocabulary.
-- **Reasoning effort profiles.** A request's `reasoning_effort` (`low`, `medium` or `high`) sets Inkling's thinking effort (0.2, 0.7 or 0.99). It also sets a thinking budget sized to the request's output room: <code>low</code> keeps a soft nudge, <code>medium</code> nudges from a third of the room and stops at two thirds, and <code>high</code> doesn't nudge and stops at 80%.
+- **Speculative decoding.** Adaptive verification, so only drafts likely to be accepted are verified, and a 16k-token draft vocabulary.
+- **Reasoning effort profiles.** A request's `reasoning_effort` (`low`, `medium` or `high`) sets Inkling's thinking effort (0.2, 0.7 or 0.99). It also sets a thinking budget sized to the request's output room: `low` uses the server defaults (soft nudge from 5,000 thinking tokens, hard cap at 12,000), `medium` nudges from a third of the room and stops at two thirds, and `high` doesn't nudge and stops at 80%.
 
 Every change has an environment switch that restores stock behaviour, so you can check any one of them yourself.
 
@@ -64,7 +65,7 @@ Inkling thinks before it answers, and on hard coding steps it can keep thinking 
 
 Inkling's end-of-thinking token sits about 15 to 30 logits below the top choice at a pause (median 23), so a boost that starts from zero does nothing for thousands of tokens. That's why the nudge starts with a step (`base`) and goes up to 18.
 
-Any request can set its own budget through `vllm_xargs` (`think_nudge`, `think_end_boost`, `think_cap`), or use the effort profiles: `low` uses the server defaults above, `medium` nudges from a third of the request's output room and stops at two thirds, and `high` doesn't nudge and stops at 80%.
+Any request can set its own budget through `vllm_xargs` (`think_nudge`, `think_end_boost`, `think_cap`), or use the effort profiles: `low` uses the server defaults (soft nudge from 5,000 thinking tokens, hard cap at 12,000), `medium` nudges from a third of the request's output room and stops at two thirds, and `high` doesn't nudge and stops at 80%.
 
 The soft budget follows the think-end boost in [gr8](https://github.com/kindlingai/gr8), with two changes for Inkling: the boost starts with a step and is gated to pauses, and it tracks the thinking blocks the model opens itself. gr8 applies its boost only when the prompt leaves a thinking block open, which an Inkling prompt never does.
 
@@ -83,7 +84,7 @@ Then point any OpenAI-compatible client at `http://localhost:8100/v1`, model `in
 
 - **[vLLM](https://github.com/vllm-project/vllm)** (Apache-2.0). Everything here is a set of patches to vLLM and its Inkling 2 support: the batching, paged KV cache, chunked prefill, prefix caching, speculative decoding and the OpenAI-compatible server are all vLLM's.
 - **[Thinking Machines Lab](https://huggingface.co/thinkingmachines/Inkling-2-Mini)**, for Inkling 2 Mini and its DSpark drafter (Apache-2.0).
-- **Ingine** by satellitedown ([inkling-2-mini-abliterated-ingine](https://github.com/satellitedown/inkling-2-mini-abliterated-ingine), Apache-2.0), a hand-written CUDA engine for Inkling 2 Mini on one RTX 5090. Profiling its decode step next to ours showed where our time was going, and several of our kernels follow its ideas: loading weights before the programmatic-dependent-launch wait, one launch for several projections, a single-kernel loop message-gate chain, the conv/mix layout, prefetching the expert down-projection, a confidence threshold for how many drafts to verify, and FP8 dense weights with per-row scales. No Ingine code is copied; each file in the repo says which idea it follows.
+- **Ingine** by satellitedown ([inkling-2-mini-abliterated-ingine](https://github.com/satellitedown/inkling-2-mini-abliterated-ingine), Apache-2.0), a hand-written CUDA engine for Inkling 2 Mini on one RTX 5090. Profiling its decode step showed us where our own time was going, and several of our kernels follow its ideas: loading weights before the programmatic-dependent-launch wait, one launch for several projections, a single-kernel loop message-gate chain, the conv/mix layout, prefetching the expert down-projection, a confidence threshold for how many drafts to verify, and FP8 dense weights with per-row scales. No Ingine code is copied; each file in the repo says which idea it follows.
 - **[gr8](https://github.com/kindlingai/gr8)**, whose think-end boost and thinking budget ThinkNudge's soft budget follows.
 - **Ash and Mia of TensorFold**: this work was inspired by what they have shared and talked about.
 - **[Triton](https://github.com/triton-lang/triton)**, which the FP8 prefill, ThinkNudge and several decode kernels are written in, and **NVIDIA Nsight Systems**, used for the profiles.

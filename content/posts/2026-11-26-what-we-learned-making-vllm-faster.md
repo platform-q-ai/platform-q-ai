@@ -26,17 +26,17 @@ Most of the big kernels were already near the card's memory bandwidth:
 
 So no single kernel rewrite was going to give a big win.
 
-## 2. Study a fast engine, kernel by kernel
+## 2. Study another engine's design
 
-[Ingine](https://github.com/satellitedown/inkling-2-mini-abliterated-ingine), a hand-written CUDA engine for this model, showed us where to look. We profiled it and our build with Nsight Systems on the same card and charged each moment of GPU time to the kernel that was running.
+[Ingine](https://github.com/satellitedown/inkling-2-mini-abliterated-ingine) is a hand-written CUDA engine for this model. We profiled it and our build with Nsight Systems on the same card and charged each moment of GPU time to the kernel that was running.
 
-The gap wasn't kernel speed; it was **overlap**. Ingine starts loading the next kernel's weights before the previous kernel has finished, using programmatic dependent launch (PDL). In vLLM, a single cuBLAS call in the middle of the loop's gate chain broke that overlap, so the projection after it started cold.
+Studying Ingine's design showed what to look for: **overlap**, not kernel speed. Ingine starts loading the next kernel's weights before the previous kernel has finished, using programmatic dependent launch (PDL). In vLLM, a single cuBLAS call in the middle of the loop's gate chain broke that overlap, so the projection after it started cold.
 
 Replacing that chain with kernels that keep PDL working, and loading weights before each wait, was the biggest exact win. Exact means the same arithmetic, just better scheduled.
 
 ## 3. One small GEMM can waste 5% of the step
 
-The profile showed one real kernel defect. At verify widths, a small `down` projection inside the loop controller ran as a 6-block kernel without split-K, on a card with 170 SMs. It took 24 µs each time and ran 24 times a step: 5% of the step. Splitting it across the GPU fixed it.
+The profile showed one real kernel defect. At verify widths, a small `down` projection inside the loop controller ran as a 6-block kernel without split-K, on a card with 170 SMs. It took 24 µs each time and ran 24 times a step: about 0.6 ms per step, 5% of the 11.4 ms speculative step we started from. Splitting it across the GPU fixed it.
 
 ## 4. Speculative decoding is where the rows come from
 
@@ -54,9 +54,11 @@ The worst-case error was the same, 3.7 × 10⁻³, for both. The mean error was 
 
 Moving the dense layers and head to FP8 took the step from 6.36 ms to 5.69 ms. But how you do it matters more for context than for speed:
 
-<div class="table-wrap"><table><thead><tr><th>FP8 variant</th><th>KV pool</th><th>matches reference</th></tr></thead><tbody><tr><td>BF16 copies kept for prefill</td><td>241k tokens</td><td>96.1%</td></tr><tr><td>BF16 freed, FP8 weights and activations in prefill</td><td><strong>380k tokens</strong></td><td>95.7%</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>FP8 variant</th><th>KV pool</th><th>matches reference</th></tr></thead><tbody><tr><td>BF16 copies kept for prefill</td><td>241k tokens</td><td>96.1%</td></tr><tr><td>BF16 freed, FP8 weights and activations in prefill</td><td><strong>358k tokens</strong></td><td>95.7%</td></tr></tbody></table></div>
 
-Keeping the BF16 copies keeps prefill exact, but costs about 115k tokens of KV cache. Freeing them needed our own Triton W8A8 GEMM and activation-quantisation kernels, because the stock vLLM image ships neither for sm_120.
+Measured at 229k and 262k maximum context; served at 344k, the FP8 build's pool is 380k.
+
+Keeping the BF16 copies keeps prefill exact, but costs about 115k tokens of KV cache. Freeing them needed new kernels: we wrote our own Triton W8A8 GEMM and FP8 quantisation kernels for the RTX 5090 (sm_120).
 
 ## 7. A "prefill regression" that wasn't
 

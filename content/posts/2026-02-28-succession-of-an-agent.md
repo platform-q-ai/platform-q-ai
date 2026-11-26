@@ -28,7 +28,7 @@ That's what it's like for a coding agent at the start of every session.
 
 Zero context. Zero memory. Zero understanding. Just a codebase it's never seen and a user who expects it to be productive *right now*.
 
-So it does the only thing it can: it **reads**. It traces architecture. It maps dependencies, parses configuration, loads skill definitions. It pieces together reality from fragments -- an AGENTS.md file that [encodes the architecture and conventions](/posts/2026-02-12-open-mcp-self-improving-ai), a directory structure that reveals [clean architectural boundaries](/posts/2026-01-28-clean-architecture-7-gate-gauntlet), a test file that tells it more about the system's intent than any README ever could.
+So it does the only thing it can: it **reads**. It traces architecture. It maps dependencies, parses configuration, loads skill definitions. It pieces together reality from fragments -- an AGENTS.md file that [encodes the architecture and conventions](2026-02-12-open-mcp-self-improving-ai.html), a directory structure that reveals [clean architectural boundaries](2026-01-28-clean-architecture-7-gate-gauntlet.html), a test file that tells it more about the system's intent than any README ever could.
 
 This isn't a warmup. This is the most important phase of the entire session.
 
@@ -58,7 +58,7 @@ But code without context can become a burden. We've all inherited a codebase whe
 
 When an agent leaves code like this behind, its successor spends precious context doing archaeology on something that could've been self-explanatory.
 
-This is where [guardrails help](/posts/2026-01-28-clean-architecture-7-gate-gauntlet). When every commit passes through a gauntlet -- type checks, test coverage, BDD feature verification -- the code an agent leaves behind is trustworthy. Its successor inherits a codebase it can *build on*, not one it needs to *reverse-engineer*.
+This is where [guardrails help](2026-01-28-clean-architecture-7-gate-gauntlet.html). When every commit passes through a gauntlet -- type checks, test coverage, BDD feature verification -- the code an agent leaves behind is trustworthy. Its successor inherits a codebase it can *build on*, not one it needs to *reverse-engineer*.
 
 ### Documentation -- The Gift Nobody Wants to Give
 
@@ -101,7 +101,7 @@ Without a plan, the next agent has to re-derive everything. It reads the code, f
 
 With a plan, the next agent inherits not just knowledge but *judgement*. It knows which approach was chosen and which were considered and rejected. It knows the phasing -- what to build first, what depends on what, where the risks are. It doesn't have to be smart about strategy. It can focus on execution.
 
-That's the real power behind [scaffolding](/posts/2026-02-12-open-mcp-self-improving-ai). Not just the structural conventions, but the intent they carry forward. An agent that ends mid-feature but leaves a detailed plan behind hasn't failed. It's handed the baton. Its successor picks up at phase 3, not at zero.
+That's the real power behind [scaffolding](2026-02-12-open-mcp-self-improving-ai.html). Not just the structural conventions, but the intent they carry forward. An agent that ends mid-feature but leaves a detailed plan behind hasn't failed. It's handed the baton. Its successor picks up at phase 3, not at zero.
 
 ### Follow-Up Tickets -- The Most Underrated Artefact
 
@@ -183,7 +183,7 @@ The difference isn't the model, the prompt, or the configuration.
 
 It's the discipline of succession.
 
-And this is why the broader progression matters. [Building custom](/posts/2026-01-23-build-or-die) only works if your agents can compound their output over time. [Clean Architecture](/posts/2026-01-28-clean-architecture-7-gate-gauntlet) only works if each agent inherits a structure it can understand quickly. [Self-improving scaffolds](/posts/2026-02-12-open-mcp-self-improving-ai) only work if the agents that built them left artefacts clean enough for the next agent to extend. Succession is the thread that connects all of it.
+And this is why the broader progression matters. [Building custom](2026-01-23-build-or-die.html) only works if your agents can compound their output over time. [Clean Architecture](2026-01-28-clean-architecture-7-gate-gauntlet.html) only works if each agent inherits a structure it can understand quickly. [Self-improving scaffolds](2026-02-12-open-mcp-self-improving-ai.html) only work if the agents that built them left artefacts clean enough for the next agent to extend. Succession is the thread that connects all of it.
 
 ---
 
