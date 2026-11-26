@@ -45,6 +45,12 @@ The decode changes on their own don't change accuracy: 96.5%. The small drop com
 
 Every change has an environment switch that restores stock behaviour, so you can check any one of them yourself.
 
+### Precision
+
+The DSpark drafter has 3 layers and proposes 7 tokens.
+
+<div class="table-wrap table-text"><table><thead><tr><th>part of the model</th><th>precision</th></tr></thead><tbody><tr><td>Routed MoE experts</td><td>NVFP4, as shipped in the checkpoint; layers 20–23 in MXFP8</td></tr><tr><td>Attention projections, all 24 layers (fused qkv and output)</td><td>FP8 E4M3 weights with per-row scales; activations FP8 per-token in prefill (W8A8), BF16 in decode</td></tr><tr><td>LM head, shared with the drafter</td><td>FP8 E4M3</td></tr><tr><td>DSpark drafter attention (qkv, context kv, output) and MLP (gate-up, down)</td><td>FP8 E4M3</td></tr><tr><td>DSpark drafter 16,384-token draft head and Markov head</td><td>BF16</td></tr><tr><td>Embeddings, router, loop gates, norms, short convolutions</td><td>BF16</td></tr><tr><td>KV cache</td><td>FP8</td></tr></tbody></table></div>
+
 ## Run it
 
 ```bash

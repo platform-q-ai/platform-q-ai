@@ -52,6 +52,14 @@
             <dt>Single stream</dt>
             <dd><span class="stat-value">340<span class="stat-unit">tok/s</span></span><span class="stat-note">on code; 330 on JSON, 253 on prose</span></dd>
           </div>
+          <div class="stat">
+            <dt>Power draw</dt>
+            <dd><span class="stat-value">~430<span class="stat-unit">W</span></span><span class="stat-note">RTX 5090, 4 agents running</span></dd>
+          </div>
+          <div class="stat">
+            <dt>GPU temperature</dt>
+            <dd><span class="stat-value">~65<span class="stat-unit">°C</span></span><span class="stat-note">RTX 5090, 4 agents running</span></dd>
+          </div>
         </dl>
 
         <figure class="minichart" aria-labelledby="minichart-cap">
@@ -61,6 +69,20 @@
             <li><span class="minichart-label">~90k</span><span class="minichart-track" aria-hidden="true"><span class="minichart-bar" style="width: 67%"></span></span><span class="minichart-value">~670</span></li>
           </ul>
         </figure>
+
+        <section class="spec" aria-labelledby="spec-title">
+          <h3 id="spec-title">Precision</h3>
+          <p class="spec-note">DSpark drafter: 3 layers, proposes 7 tokens.</p>
+          <dl class="spec-list">
+            <div><dt>Routed MoE experts</dt><dd>NVFP4, as shipped in the checkpoint; layers 20–23 in MXFP8</dd></div>
+            <div><dt>Attention projections, all 24 layers (fused qkv and output)</dt><dd>FP8 E4M3 weights with per-row scales; activations FP8 per-token in prefill (W8A8), BF16 in decode</dd></div>
+            <div><dt>LM head, shared with the drafter</dt><dd>FP8 E4M3</dd></div>
+            <div><dt>DSpark drafter attention (qkv, context kv, output) and MLP (gate-up, down)</dt><dd>FP8 E4M3</dd></div>
+            <div><dt>DSpark drafter 16,384-token draft head and Markov head</dt><dd>BF16</dd></div>
+            <div><dt>Embeddings, router, loop gates, norms, short convolutions</dt><dd>BF16</dd></div>
+            <div><dt>KV cache</dt><dd>FP8</dd></div>
+          </dl>
+        </section>
       </div>
     </section>
 

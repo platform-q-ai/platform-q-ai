@@ -274,13 +274,33 @@ p { margin: 0; }
 @media (min-width: 900px) {
   .feature-card {
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-    grid-template-areas: "text stats" "chart stats";
+    grid-template-areas: "text stats" "chart stats" "spec spec";
     gap: 2rem 3.5rem;
     padding: 2.5rem;
   }
   .feature-text { grid-area: text; }
   .stats { grid-area: stats; align-self: start; }
   .minichart { grid-area: chart; align-self: end; }
+  .spec { grid-area: spec; }
+}
+
+/* precision list inside the feature panel */
+.spec { padding-top: 1.25rem; border-top: 1px solid var(--rule); }
+.spec h3 { font-size: 0.9375rem; }
+.spec-note { margin-top: 0.25rem; font-size: 0.8125rem; color: var(--muted); }
+.spec-list { margin: 0.75rem 0 0; display: grid; }
+.spec-list > div {
+  display: grid;
+  gap: 0.125rem;
+  padding-block: 0.5rem;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+.spec-list dt { color: var(--text-2); }
+.spec-list dd { margin: 0; font-family: var(--font-mono); font-size: 0.8125rem; color: var(--text); }
+@media (min-width: 640px) {
+  .spec-list > div { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.5rem; }
 }
 
 /* ---------- Home: writing ---------- */
@@ -465,6 +485,9 @@ p { margin: 0; }
   border-bottom: 1px solid var(--rule-strong);
 }
 .table-wrap tbody tr + tr td { border-top: 1px solid var(--rule); }
+/* text tables: cells wrap and read left to right */
+.table-text th, .table-text td { text-align: left; white-space: normal; }
+.table-text td:last-child { min-width: 12rem; color: var(--text); }
 .table-wrap td strong { color: var(--text); }
 
 /* ---------- Post footer ---------- */
