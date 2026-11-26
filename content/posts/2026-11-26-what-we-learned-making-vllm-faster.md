@@ -7,7 +7,7 @@ tags: ["inkling", "vllm", "rtx-5090", "profiling", "kernels"]
 category: "Research"
 intro: "Optimising Inkling 2 Mini on one RTX 5090 for long-running agentic tasks and coding: what the profiles showed, the changes that paid off, the ones that didn't, and how we kept accuracy honest."
 image_alt: "Bar chart of single-stream decode throughput on one RTX 5090: 340 tok/s on code, 330 on JSON and 253 on prose."
-image_height: 720
+image_height: 760
 image: "/images/inkling-lessons.svg"
 author: "Platform Q.ai"
 ---

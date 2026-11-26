@@ -240,6 +240,7 @@ p { margin: 0; }
 }
 .stat:nth-child(odd) { border-right: 1px solid var(--rule); }
 .stat:nth-child(even) { padding-left: 0.75rem; }
+.stats-footnote { margin-top: 0.75rem; font-size: 0.8125rem; color: var(--muted); }
 .stat dt { font-size: 0.8125rem; color: var(--muted); }
 .stat dd { margin: 0.25rem 0 0; }
 .stat-value {
@@ -279,7 +280,7 @@ p { margin: 0; }
     padding: 2.5rem;
   }
   .feature-text { grid-area: text; }
-  .stats { grid-area: stats; align-self: start; }
+  .stats-block { grid-area: stats; align-self: start; }
   .minichart { grid-area: chart; align-self: end; }
   .spec { grid-area: spec; }
 }

@@ -7,7 +7,7 @@ tags: ["inkling", "vllm", "rtx-5090", "inference", "fp8"]
 category: "Inference"
 intro: "A set of vLLM patches that optimises Inkling 2 Mini on one RTX 5090 for long-running agentic tasks and coding: a 5.69 ms decode step, 344k tokens of context, and four coding agents at about 670 tok/s in total with 90k tokens of context each."
 image_alt: "Bar chart of four concurrent agent streams on one RTX 5090: total throughput with all four decoding is about 920 tok/s at about 10k tokens of context per stream and about 670 at 90k."
-image_height: 570
+image_height: 610
 image: "/images/inkling-recipe.svg"
 author: "Platform Q.ai"
 ---
@@ -18,7 +18,7 @@ The result is a set of vLLM patches, open source under Apache-2.0: **[github.com
 
 ## Results
 
-Measured on one RTX 5090 with 4 concurrent sequences, FP8 KV cache, and the model's DSpark drafter proposing 7 tokens.
+Measured on one RTX 5090 with 4 concurrent sequences, FP8 KV cache, and the model's DSpark drafter proposing 7 tokens. All speed figures are at temperature 1.0, Inkling's default sampling, not greedy decoding.
 
 <div class="table-wrap"><table><thead><tr><th>measure</th><th>our figures</th></tr></thead><tbody><tr><td>decode step</td><td>5.69 ms</td></tr><tr><td>single stream, tok/s (code / JSON / prose)</td><td>340 / 330 / 253</td></tr><tr><td>prefill</td><td>~11k tok/s</td></tr><tr><td>KV cache pool</td><td>380k tokens</td></tr><tr><td>max context</td><td>344k tokens</td></tr></tbody></table></div>
 
@@ -32,7 +32,7 @@ At four streams the card draws about 430 W and runs at about 65 °C.
 
 ### Accuracy
 
-With FP8, the model's next token matches the full-precision reference 95.7% of the time, over about 11,000 positions including a 57,556-token real-code prompt. The reference matches itself 96.4% of the time from run to run; that's the noise floor from sampling and kernel order.
+With FP8, the model's next token matches the full-precision reference 95.7% of the time, over about 11,000 positions including a 57,556-token real-code prompt. The reference matches itself 96.4% of the time from run to run; that's the noise floor from sampling and kernel order. These agreement figures are greedy, teacher-forced comparisons against the reference.
 
 The decode changes on their own don't change accuracy: 96.5%. The small drop comes from running prefill in FP8. If you'd rather keep prefill in BF16, one switch (`E22_DENSE_FP8=1`) does that. It measures 96.1% and leaves about 115k fewer tokens of KV pool.
 

@@ -1,11 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" width="1200" height="720" role="img" aria-labelledby="t d">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" width="1200" height="760" role="img" aria-labelledby="t d">
 <title id="t">Single-stream decode on one RTX 5090</title><desc id="d">Single-stream decode throughput: 340 tok/s on code, 330 on JSON and 253 on prose.</desc>
 <style>
 .bg{fill:#ffffff}.t{fill:#16181d}.m{fill:#5b6069}.track{fill:#efece8}.bar{fill:#ff5722}.ghost{fill:#ff5722;opacity:.28}.rule{stroke:#e4e1dc;stroke-width:2}
 text{font-family:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}.mono{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums}
 @media (prefers-color-scheme:dark){.bg{fill:#16191c}.t{fill:#eceae6}.m{fill:#a3a8b0}.track{fill:#23272c}.bar{fill:#ff6a3d}.ghost{fill:#ff6a3d;opacity:.3}.rule{stroke:#2a2e33}}
 </style>
-<rect class="bg" width="1200" height="720"/>
+<rect class="bg" width="1200" height="760"/>
 <rect class="bar" x="60" y="56" width="48" height="6"/>
 <text class="t" x="60" y="116" font-size="42" font-weight="600">Single-stream decode on one RTX 5090</text>
 <text class="m" x="60" y="160" font-size="28">Inkling 2 Mini · tok/s by kind of output · 5.69 ms decode step</text>
@@ -23,4 +23,5 @@ text{font-family:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-
 <rect class="bar" x="60" y="560" width="683.1" height="48" rx="4"/>
 <line class="rule" x1="60" x2="1140" y1="650" y2="650"/>
 <text class="m" x="60" y="690" font-size="28">FP8 KV cache · DSpark drafter proposing 7 tokens · 344k max context.</text>
+<text class="m" x="60" y="730" font-size="28">Temperature 1.0, the model's default sampling (not greedy).</text>
 </svg>
