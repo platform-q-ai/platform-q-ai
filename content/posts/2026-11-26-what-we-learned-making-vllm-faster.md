@@ -5,12 +5,13 @@ draft: false
 layout: post
 tags: ["inkling", "vllm", "rtx-5090", "profiling", "kernels"]
 category: "Research"
-intro: "From 8.29 ms to 5.69 ms per decode step on one RTX 5090: what the profiles showed, the changes that paid off, the ones that didn't, and how we kept accuracy honest."
+intro: "Optimising Inkling 2 Mini on one RTX 5090 for long-running agentic tasks and coding: what the profiles showed, the changes that paid off, the ones that didn't, and how we kept accuracy honest."
+image_alt: "Bar chart of single-stream decode throughput on one RTX 5090: 324 tok/s on code, 331 on JSON and 253 on prose."
 image: "/images/inkling-lessons.svg"
 author: "Platform Q.ai"
 ---
 
-We set out to make vLLM serve Inkling 2 Mini faster on a single RTX 5090. The rule was to keep everything vLLM gives an agent server for free: batching, paged KV cache, prefix caching and speculative decoding. These are the lessons that held up, with the numbers behind them. The finished recipe is in [Inkling 2 Mini on one RTX 5090: the recipe](2026-11-26-inkling-2-mini-rtx-5090-recipe.html).
+We set out to optimise vLLM's serving of Inkling 2 Mini on a single RTX 5090 for long-running agentic tasks and coding. The rule was to keep everything vLLM gives an agent server for free: batching, paged KV cache, prefix caching and speculative decoding. These are the lessons that held up, with the numbers behind them. The finished recipe is in [Inkling 2 Mini on one RTX 5090: the recipe](2026-11-26-inkling-2-mini-rtx-5090-recipe.html).
 
 ## 1. Profile first: it wasn't launch overhead
 
@@ -24,11 +25,11 @@ Most of the big kernels were already near the card's memory bandwidth:
 
 So no single kernel rewrite was going to give a big win.
 
-## 2. Compare against a fast engine, kernel by kernel
+## 2. Study a fast engine, kernel by kernel
 
-[Ingine](https://github.com/satellitedown/inkling-2-mini-abliterated-ingine), a hand-written CUDA engine for this model, ran a plain decode step in 4.05 ms against vLLM's 5.92. We profiled both with Nsight Systems on the same card and charged each moment of GPU time to the kernel that was running.
+[Ingine](https://github.com/satellitedown/inkling-2-mini-abliterated-ingine), a hand-written CUDA engine for this model, showed us where to look. We profiled it and our build with Nsight Systems on the same card and charged each moment of GPU time to the kernel that was running.
 
-The raw kernels were nearly identical. A dense projection took 25.4 µs in Ingine and 25.5 µs in vLLM. The difference was **overlap**. Ingine starts loading the next kernel's weights before the previous kernel has finished, using programmatic dependent launch (PDL). That hid about 0.9 ms per step. In vLLM, a single cuBLAS call in the middle of the loop's gate chain broke that overlap, so the projection after it started cold.
+The gap wasn't kernel speed; it was **overlap**. Ingine starts loading the next kernel's weights before the previous kernel has finished, using programmatic dependent launch (PDL). In vLLM, a single cuBLAS call in the middle of the loop's gate chain broke that overlap, so the projection after it started cold.
 
 Replacing that chain with kernels that keep PDL working, and loading weights before each wait, was the biggest exact win. Exact means the same arithmetic, just better scheduled.
 
@@ -44,7 +45,7 @@ Adaptive verification, which verifies only the drafts likely to be accepted, cut
 
 ## 5. Check "not bit-identical" before you worry
 
-Our split-KV local attention changes the order of a floating-point sum, so its outputs aren't bit-identical to stock. We checked whether that cost precision by comparing both against a 64-bit reference over 64 cases.
+Our split-KV local attention changes the order of a floating-point sum, so its outputs aren't bit-identical to the unsplit kernel's. We checked whether that cost precision by comparing both against a 64-bit reference over 64 cases.
 
 The worst-case error was the same, 3.7 × 10⁻³, for both. The mean error was slightly *lower* with the split, 5.9–6.0 × 10⁻⁵ against 6.1–6.3 × 10⁻⁵. Different isn't worse; measure it.
 
@@ -52,13 +53,13 @@ The worst-case error was the same, 3.7 × 10⁻³, for both. The mean error was 
 
 Moving the dense layers and head to FP8 took the step from 6.36 ms to 5.69 ms. But how you do it matters more for context than for speed:
 
-<div class="table-wrap"><table><thead><tr><th>FP8 variant</th><th>KV pool</th><th>agreement with stock</th></tr></thead><tbody><tr><td>BF16 copies kept for prefill</td><td>241k tokens</td><td>96.1%</td></tr><tr><td>BF16 freed, FP8 weights and activations in prefill</td><td><strong>380k tokens</strong></td><td>95.7%</td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>FP8 variant</th><th>KV pool</th><th>matches reference</th></tr></thead><tbody><tr><td>BF16 copies kept for prefill</td><td>241k tokens</td><td>96.1%</td></tr><tr><td>BF16 freed, FP8 weights and activations in prefill</td><td><strong>380k tokens</strong></td><td>95.7%</td></tr></tbody></table></div>
 
 Keeping the BF16 copies keeps prefill exact, but costs about 115k tokens of KV cache. Freeing them needed our own Triton W8A8 GEMM and activation-quantisation kernels, because the stock vLLM image ships neither for sm_120.
 
 ## 7. A "prefill regression" that wasn't
 
-For a while, every new build looked 35% slower at prefill. It turned out every fresh server compiled its Triton kernels from scratch: stock vLLM measured 6,633 tok/s cold and 10,635 warm. Passing a persistent Triton cache and running one warm-up pass made the numbers honest. Every result we publish is warm.
+For a while, every new build looked 35% slower at prefill. It turned out every fresh server compiled its Triton kernels from scratch: the same server measured 6,633 tok/s cold and 10,635 warm. Passing a persistent Triton cache and running one warm-up pass made the numbers honest. Every result we publish is warm.
 
 ## 8. Bigger prefill chunks are faster, until they don't fit
 
@@ -66,9 +67,9 @@ Prefill chunks of 2,048 tokens instead of 1,024 lifted prefill from 11.0k to 13.
 
 ## 9. Measure accuracy with a noise floor
 
-Every change went through the same gate: about 11,000 teacher-forced positions, including a 57,556-token real-code prompt, scored against stock vLLM. Stock agrees with itself 96.4%, and the run-to-run noise is about half a point.
+Every change went through the same gate: about 11,000 teacher-forced positions, including a 57,556-token real-code prompt, scored against the full-precision reference. The reference matches itself 96.4% of the time, and the run-to-run noise is about half a point.
 
-A change counted as accuracy-neutral only if it stayed inside that band. That's how we know the decode work is free: 96.5%. It's also how we know FP8 prefill isn't quite free: 95.7%, 0.7 points down, which we chose for the extra context.
+A change counted as accuracy-neutral only if it stayed inside that band. That's how we know the decode work doesn't change accuracy: 96.5%. It's also how we know FP8 prefill isn't quite free: 95.7%, just below that band, which we chose for the extra context.
 
 ## 10. For agents, KV memory is the limit
 

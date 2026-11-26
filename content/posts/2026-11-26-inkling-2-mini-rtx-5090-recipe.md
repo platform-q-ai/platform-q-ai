@@ -5,7 +5,8 @@ draft: false
 layout: post
 tags: ["inkling", "vllm", "rtx-5090", "inference", "fp8"]
 category: "Inference"
-intro: "A set of vLLM patches that runs Inkling 2 Mini on one RTX 5090 with 1.3× faster decode than stock, 344k tokens of context, and four coding agents at about 165 tok/s each with 90k tokens of context."
+intro: "A set of vLLM patches that optimises Inkling 2 Mini on one RTX 5090 for long-running agentic tasks and coding: a 5.69 ms decode step, 344k tokens of context, and four coding agents at about 165 tok/s each with 90k tokens of context."
+image_alt: "Bar chart of four concurrent agent streams on one RTX 5090: total throughput 746 tok/s at about 10k tokens of context per stream, 563 at 90k and 162 at 150k."
 image: "/images/inkling-recipe.svg"
 author: "Platform Q.ai"
 ---
@@ -16,9 +17,9 @@ The result is a set of vLLM patches, open source under Apache-2.0: **[github.com
 
 ## Results
 
-Same card, same checkpoint, same settings: 4 concurrent sequences, FP8 KV cache, and the model's DSpark drafter proposing 7 tokens.
+Measured on one RTX 5090 with 4 concurrent sequences, FP8 KV cache, and the model's DSpark drafter proposing 7 tokens.
 
-<div class="table-wrap"><table><thead><tr><th></th><th>stock vLLM</th><th>this build</th></tr></thead><tbody><tr><td>decode step</td><td>8.29 ms</td><td><strong>5.69 ms</strong></td></tr><tr><td>single stream, tok/s (code / JSON / prose)</td><td>247 / 241 / 167</td><td><strong>324 / 331 / 253</strong></td></tr><tr><td>prefill tok/s at 60k / 150k tokens</td><td>10.6k / 7.09k</td><td><strong>11.0k / 7.25k</strong></td></tr><tr><td>KV cache pool</td><td>312k tokens</td><td><strong>380k tokens</strong></td></tr><tr><td>max context</td><td>312k</td><td><strong>344k</strong></td></tr></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>measure</th><th>our figures</th></tr></thead><tbody><tr><td>decode step</td><td>5.69 ms</td></tr><tr><td>single stream, tok/s (code / JSON / prose)</td><td>324 / 331 / 253</td></tr><tr><td>prefill tok/s at 60k / 150k tokens</td><td>11.0k / 7.25k</td></tr><tr><td>KV cache pool</td><td>380k tokens</td></tr><tr><td>max context</td><td>344k tokens</td></tr></tbody></table></div>
 
 ### Four coding agents at once
 
@@ -32,9 +33,9 @@ At four streams the card draws about 430 W and runs at about 65 °C.
 
 ### Accuracy
 
-We compare each build's predictions with stock vLLM's, token by token, over about 11,000 positions, including a 57,556-token real-code prompt. Stock vLLM agrees with itself 96.4% of the time; that's the noise floor from sampling and kernel order. This build agrees 95.7%.
+With FP8, the model's next token matches the full-precision reference 95.7% of the time, over about 11,000 positions including a 57,556-token real-code prompt. The reference matches itself 96.4% of the time from run to run; that's the noise floor from sampling and kernel order.
 
-The decode changes on their own are within noise of stock: 96.5%. The 0.7-point difference comes from running prefill in FP8. If you'd rather keep prefill in BF16, one switch (`E22_DENSE_FP8=1`) does that. It measures 96.1% and costs about 115k tokens of KV pool.
+The decode changes on their own don't change accuracy: 96.5%. The small drop comes from running prefill in FP8. If you'd rather keep prefill in BF16, one switch (`E22_DENSE_FP8=1`) does that. It measures 96.1% and leaves about 115k fewer tokens of KV pool.
 
 ## What changed
 

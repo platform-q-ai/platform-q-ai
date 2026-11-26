@@ -1,7 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
-<rect width="1200" height="630" fill="#14110f"/>
-<rect x="0" y="0" width="14" height="630" fill="#ff5722"/>
-<text x="90" y="300" font-family="DM Serif Display, Georgia, serif" font-size="190" fill="#ff5722">5.69 ms</text>
-<text x="96" y="390" font-family="DM Mono, monospace" font-size="38" fill="#f4efe9">per decode step, down from 8.29</text>
-<text x="96" y="450" font-family="DM Mono, monospace" font-size="28" fill="#a89f96">what we measured, what worked, what didn't</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" width="1200" height="720" role="img" aria-labelledby="t d">
+<title id="t">Single-stream decode on one RTX 5090</title><desc id="d">Single-stream decode throughput: 324 tok/s on code, 331 on JSON and 253 on prose.</desc>
+<style>
+.bg{fill:#ffffff}.t{fill:#16181d}.m{fill:#5b6069}.track{fill:#efece8}.bar{fill:#ff5722}.ghost{fill:#ff5722;opacity:.28}.rule{stroke:#e4e1dc;stroke-width:2}
+text{font-family:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}.mono{font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums}
+@media (prefers-color-scheme:dark){.bg{fill:#16191c}.t{fill:#eceae6}.m{fill:#a3a8b0}.track{fill:#23272c}.bar{fill:#ff6a3d}.ghost{fill:#ff6a3d;opacity:.3}.rule{stroke:#2a2e33}}
+</style>
+<rect class="bg" width="1200" height="720"/>
+<rect class="bar" x="60" y="56" width="48" height="6"/>
+<text class="t" x="60" y="116" font-size="42" font-weight="600">Single-stream decode on one RTX 5090</text>
+<text class="m" x="60" y="160" font-size="28">Inkling 2 Mini · tok/s by kind of output · 5.69 ms decode step</text>
+<text class="t mono" x="60" y="240" font-size="34" font-weight="500">code</text>
+<text class="t mono" x="1140" y="240" font-size="34" text-anchor="end">324 tok/s</text>
+<rect class="track" x="60" y="260" width="1080" height="48" rx="4"/>
+<rect class="bar" x="60" y="260" width="874.8" height="48" rx="4"/>
+<text class="t mono" x="60" y="390" font-size="34" font-weight="500">JSON</text>
+<text class="t mono" x="1140" y="390" font-size="34" text-anchor="end">331 tok/s</text>
+<rect class="track" x="60" y="410" width="1080" height="48" rx="4"/>
+<rect class="bar" x="60" y="410" width="893.7" height="48" rx="4"/>
+<text class="t mono" x="60" y="540" font-size="34" font-weight="500">prose</text>
+<text class="t mono" x="1140" y="540" font-size="34" text-anchor="end">253 tok/s</text>
+<rect class="track" x="60" y="560" width="1080" height="48" rx="4"/>
+<rect class="bar" x="60" y="560" width="683.1" height="48" rx="4"/>
+<line class="rule" x1="60" x2="1140" y1="650" y2="650"/>
+<text class="m" x="60" y="690" font-size="28">FP8 KV cache · DSpark drafter proposing 7 tokens · 344k max context.</text>
 </svg>

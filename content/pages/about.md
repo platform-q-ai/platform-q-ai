@@ -2,6 +2,7 @@
 title: "About"
 layout: page
 subtitle: "About Platform Q"
+lead: true
 ---
 
 Platform Q.ai is a research house in open software, building atomic tools to power innovation in a rapidly changing landscape.

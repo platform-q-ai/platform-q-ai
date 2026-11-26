@@ -1,0 +1,22 @@
+<%
+  # Relative prefix so links work from a web root and from a plain file server.
+  head_page = if is_map(assigns), do: Map.get(assigns, :page), else: nil
+  head_url = if is_map(head_page), do: Map.get(head_page, :url) || "", else: ""
+  head_base = if length(String.split(head_url, "/", trim: true)) > 1, do: "..", else: "."
+  head_fm = if is_map(head_page) and is_map(Map.get(head_page, :frontmatter)), do: head_page.frontmatter, else: %{}
+  head_desc = head_fm["intro"] || head_fm["description"] || head_fm["subtitle"] || "Open inference engineering for the agentic era: what we built, what worked, and what didn't."
+  head_desc = head_desc |> to_string() |> String.replace("&", "&amp;") |> String.replace("\"", "&quot;") |> String.replace("<", "&lt;") |> String.replace(">", "&gt;")
+%>
+<meta name="description" content="<%= head_desc %>">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#fbfaf8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1113" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="<%= head_base %>/css/app.css">
+<link rel="icon" type="image/png" href="<%= head_base %>/favicon-96x96.png" sizes="96x96">
+<link rel="icon" type="image/svg+xml" href="<%= head_base %>/favicon.svg">
+<link rel="shortcut icon" href="<%= head_base %>/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="<%= head_base %>/apple-touch-icon.png">
+<link rel="manifest" href="<%= head_base %>/site.webmanifest">
