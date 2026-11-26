@@ -4,10 +4,17 @@
   nav_parts = String.split(nav_url, "/", trim: true)
   base = if length(nav_parts) > 1, do: "..", else: "."
   nav_section = case nav_parts do
-    ["posts" | _] -> "posts"
+    ["posts" | _] -> (case Map.get((if is_map(nav_page), do: Map.get(nav_page, :frontmatter) || %{}, else: %{}), "section") do
+      "recipes" -> "recipes"
+      "experiments" -> "experiments"
+      _ -> "posts"
+    end)
     ["tags" | _] -> "posts"
     ["categories" | _] -> "posts"
     ["pages", "about.html"] -> "about"
+    ["pages", "recipes.html"] -> "recipes"
+    ["pages", "experiments.html"] -> "experiments"
+    ["pages", "code.html"] -> "code"
     ["index.html"] -> "home"
     _ -> "other"
   end
@@ -24,7 +31,9 @@
     <ul class="nav-links">
       <li><a href="<%= base %>/index.html"<%= nav_current.("home") %>>Home</a></li>
       <li><a href="<%= base %>/posts/index.html"<%= nav_current.("posts") %>>Posts</a></li>
-      <li><a href="https://github.com/platform-q-ai/inkling-mini-5090" rel="noopener noreferrer">Code<span aria-hidden="true">&nbsp;↗</span></a></li>
+      <li><a href="<%= base %>/pages/recipes.html"<%= nav_current.("recipes") %>>Recipes</a></li>
+      <li><a href="<%= base %>/pages/experiments.html"<%= nav_current.("experiments") %>>Experiments</a></li>
+      <li><a href="<%= base %>/pages/code.html"<%= nav_current.("code") %>>Code</a></li>
       <li><a href="<%= base %>/pages/about.html"<%= nav_current.("about") %>>About</a></li>
     </ul>
   </nav>

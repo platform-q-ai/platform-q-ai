@@ -5,6 +5,10 @@ draft: false
 layout: post
 tags: ["inkling", "vllm", "rtx-5090", "inference", "fp8"]
 category: "Inference"
+section: recipes
+lab: "Thinking Machines"
+model: "Inkling 2 Mini"
+variant: "RTX 5090 · vLLM · FP8"
 intro: "A set of vLLM patches that optimises Inkling 2 Mini on one RTX 5090 for long-running agentic tasks and coding: a 5.69 ms decode step, 344k tokens of context, and four coding agents at about 670 tok/s in total with 90k tokens of context each."
 image_alt: "Bar chart of four concurrent agent streams on one RTX 5090: total throughput with all four decoding is about 920 tok/s at about 10k tokens of context per stream and about 670 at 90k."
 image_height: 610
